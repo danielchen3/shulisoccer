@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export function Sidebar() {
@@ -17,7 +16,7 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-[220px] max-w-[25%] min-w-[180px] bg-white text-black flex flex-col">
+    <aside className="w-[230px] max-w-[25%] min-w-[180px] bg-white text-black flex flex-col">
       <div className="p-6 border-b border-blue-100 text-center">
         <img
           src={`${base}assets/logo.jpg`}
@@ -31,10 +30,10 @@ export function Sidebar() {
         {items.map(item => (
           <div
             key={item.path}
-            className={`cursor-pointer px-4 py-2 rounded-md font-medium transition-all
+            className={`cursor-pointer px-5 py-3 rounded-md font-medium transition-all
               ${location.pathname === item.path
-                ? 'bg-yellow-100 scale-[1.03] shadow-md'
-                : 'bg-yellow-50 hover:bg-yellow-100 hover:scale-[1.02]'}
+                ? 'bg-yellow-100 scale-[1.06] shadow-md'
+                : 'bg-yellow-0 hover:bg-yellow-100 hover:scale-[1.02]'}
               text-black`}
             onClick={() => navigate(item.path)}
           >

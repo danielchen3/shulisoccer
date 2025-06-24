@@ -17,6 +17,7 @@ export default function App() {
           <div className="flex-1 min-h-0 flex flex-col justify-center items-center px-4 py-8 sm:px-8 overflow-y-auto w-full">
             <div className="w-full bg-white/80 rounded-2xl shadow-2xl p-8 sm:p-12 backdrop-blur-md overflow-y-auto scrollbar-thin">
               <Routes>
+                <Route path="/shulisoccer" element={<NewsBoard />} />
                 <Route path="/" element={<NewsBoard />} />
                 <Route path="/players" element={<PlayersBoard />} />
                 <Route path="/retired_players" element={<RetiredPlayersBoard />} />

@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { goalkeeper, defender, midfield, forward } from "./playerlist";
+import { goalkeeper, defender, midfield, forward } from "./data/playerlist";
 
 const allPlayers = [...goalkeeper, ...defender, ...midfield, ...forward];
 
@@ -15,25 +15,22 @@ export function PlayerDetail() {
   const imageSrc = `${base}assets/player/${player.filename}.${imgExt}`;
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (imgExt === 'jpg') setImgExt('png');
-    else e.currentTarget.src = `${base}assets/cat.jpg`;
+    else e.currentTarget.src = `${base}assets/sydney.png`;
   };
 
-  // 你可以根据实际数据结构补充这些字段
   return (
     <div className="bg-gray-50 p-8 rounded-lg flex flex-row items-center justify-between max-w-4xl mx-auto mt-8">
       <div>
         <div className="flex items-center mb-2">
-          <span className="text-3xl font-bold mr-3">{player.name}</span>
-          <span className="text-2xl mr-2">{player.nationalityFlag}</span>
-          {/* 如有俱乐部logo可加上 */}
-          {/* <img src={player.clubLogo} alt="club" className="w-8 h-8 inline-block" /> */}
+          <span className="text-3xl font-bold mr-3 text-gray-900">{player.name}</span>
+          <span className="text-2xl mr-2 text-gray-900">{player.nationalityFlag}</span>
         </div>
         <div className="text-gray-400 text-xl mb-4">{player.enName ?? ""}</div>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-lg">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-lg text-gray-700">
           <div>俱乐部：{player.club ?? "--"}</div>
           <div>位置：{player.position}</div>
           <div>号码：{player.number}号</div>
-          <div>国籍：{player.nationality ?? "--"}</div>
+          <div>省份：{player.province ?? "--"}</div>
           <div>年龄：{player.age ?? "--"}岁</div>
           <div>生日：{player.birthday ?? "--"}</div>
           <div>身高：{player.height ?? "--"}cm</div>

@@ -1,5 +1,5 @@
 import { Player } from "./player";
-import { Retired } from "./playerlist";
+import { Retired } from "./data/playerlist";
 
 
 export function RetiredPlayersBoard() {
