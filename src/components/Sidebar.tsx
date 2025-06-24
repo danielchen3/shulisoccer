@@ -1,21 +1,20 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-type SidebarProps = {
-  setPage: (p: string) => void
-  page: string
-}
+export function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-export function Sidebar({ setPage, page }: SidebarProps) {
   const base = import.meta.env.BASE_URL || '/';
 
   const items = [
-    { label: '🏠 News', key: 'news' },
-    { label: '👥 Players', key: 'players' },
-    { label: '🎖️ Retired Players', key: 'retired_players' },
-    { label: '🥅 Top Scorers', key: 'scorers' },
-    { label: '📊 Match Stats', key: 'matches' },
-    { label: '💬 Forum', key: 'forum' },
-  ]
+    { label: '🏠 News', path: '/' },
+    { label: '👥 Players', path: '/players' },
+    { label: '🎖️ Retired Players', path: '/retired_players' },
+    { label: '🥅 Top Scorers', path: '/scorers' },
+    { label: '📊 Match Stats', path: '/matches' },
+    { label: '💬 Forum', path: '/forum' },
+  ];
 
   return (
     <aside className="w-[220px] max-w-[25%] min-w-[180px] bg-white text-black flex flex-col">
@@ -29,18 +28,18 @@ export function Sidebar({ setPage, page }: SidebarProps) {
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2">
-        {items.map(({ label, key }) => (
-          <button
-            key={key}
-            onClick={() => setPage(key)}
-            className={`w-full text-left px-4 py-2 rounded-md font-medium transition-all
-              ${page === key
+        {items.map(item => (
+          <div
+            key={item.path}
+            className={`cursor-pointer px-4 py-2 rounded-md font-medium transition-all
+              ${location.pathname === item.path
                 ? 'bg-yellow-100 scale-[1.03] shadow-md'
                 : 'bg-yellow-50 hover:bg-yellow-100 hover:scale-[1.02]'}
               text-black`}
+            onClick={() => navigate(item.path)}
           >
-            {label}
-          </button>
+            {item.label}
+          </div>
         ))}
       </nav>
 
