@@ -29,9 +29,9 @@ export const Player: React.FC<PlayerProps> = ({ filename, name, position, number
         className="w-32 h-32 object-cover rounded-full mb-4 border-2 border-gray-300 hover:scale-120 transition-transform"
       />
       <div className="text-gray-600 text-lg font-bold mb-1">{name}</div>
-      <div className="text-gray-600 mb-1">Position: {position}</div>
-      <div className="text-gray-600 mb-1">Number: {number}</div>
-      {grade && <div className="text-gray-600">Grade: {grade}</div>}
+      <div className="text-gray-600 mb-1">位置: {position}</div>
+      <div className="text-gray-600 mb-1">号码: {number}</div>
+      {grade && <div className="text-gray-600">年级: {grade}</div>}
     </div>
   );
 };

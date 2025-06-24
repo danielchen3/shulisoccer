@@ -7,16 +7,21 @@ export function Sidebar({ setPage, page }: SidebarProps) {
   const items = [
     { label: '🏠 News', key: 'news' },
     { label: '👥 Players', key: 'players' },
+    { label: '🎖️ Retired Players', key: 'retired_players' },
     { label: '🥅 Top Scorers', key: 'scorers' },
     { label: '📊 Match Stats', key: 'matches' },
     { label: '💬 Forum', key: 'forum' },
   ]
 
   return (
-    <aside className="w-[220px] max-w-[25%] min-w-[180px] bg-blue-800 text-white flex flex-col">
-      <div className="p-6 border-b border-blue-700 text-center">
-        <h1 className="text-2xl font-bold">Shuli Soccer</h1>
-        <p className="text-sm text-blue-200">树礼书院足球队官方平台</p>
+    <aside className="w-[220px] max-w-[25%] min-w-[180px] bg-white text-black flex flex-col">
+      <div className="p-6 border-b border-blue-100 text-center">
+        <img
+          src="public/assets/logo.jpg"
+          alt="Shuli Soccer Logo"
+          className="mx-auto mb-2 w-32 h-32 object-contain"
+        />
+        <div className="text-base font-semibold text-gray-800">树礼书院足球队</div>
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2">
@@ -26,15 +31,16 @@ export function Sidebar({ setPage, page }: SidebarProps) {
             onClick={() => setPage(key)}
             className={`w-full text-left px-4 py-2 rounded-md font-medium transition-all
               ${page === key
-                ? 'bg-blue-600 scale-[1.03] shadow-md'
-                : 'hover:bg-blue-700 hover:scale-[1.02]'}`}
+                ? 'bg-yellow-100 scale-[1.03] shadow-md'
+                : 'bg-yellow-50 hover:bg-yellow-100 hover:scale-[1.02]'}
+              text-black`}
           >
             {label}
           </button>
         ))}
       </nav>
 
-      <footer className="text-xs text-blue-300 text-center py-4 border-t border-blue-700">
+      <footer className="text-xs text-black text-center py-4 border-t border-blue-100">
         © 2025 Shuli Soccer
       </footer>
     </aside>

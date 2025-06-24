@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Sidebar } from './components/Sidebar'
 import { PlayersBoard } from './components/PlayersBoard'
+import { RetiredPlayersBoard } from './components/RetiredPlayersBoard'
 import { Forum } from './components/Forum'
 import { MatchStats } from './components/MatchStats'
 import { TopScorers } from './components/TopScorers'
@@ -18,6 +19,7 @@ export default function App() {
           <div className="w-full bg-white/80 rounded-2xl shadow-2xl p-8 sm:p-12 backdrop-blur-md overflow-y-auto scrollbar-thin">
             {page === 'news' && <NewsBoard />}
             {page === 'players' && <PlayersBoard />}
+            {page === 'retired_players' && <RetiredPlayersBoard />}
             {page === 'scorers' && <TopScorers />}
             {page === 'matches' && <MatchStats />}
             {page === 'forum' && <Forum />}
