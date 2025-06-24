@@ -1,9 +1,13 @@
+import React from "react";
+
 type SidebarProps = {
   setPage: (p: string) => void
   page: string
 }
 
 export function Sidebar({ setPage, page }: SidebarProps) {
+  const base = import.meta.env.BASE_URL || '/';
+
   const items = [
     { label: '🏠 News', key: 'news' },
     { label: '👥 Players', key: 'players' },
@@ -17,7 +21,7 @@ export function Sidebar({ setPage, page }: SidebarProps) {
     <aside className="w-[220px] max-w-[25%] min-w-[180px] bg-white text-black flex flex-col">
       <div className="p-6 border-b border-blue-100 text-center">
         <img
-          src="public/assets/logo.jpg"
+          src={`${base}assets/logo.jpg`}
           alt="Shuli Soccer Logo"
           className="mx-auto mb-2 w-32 h-32 object-contain"
         />
