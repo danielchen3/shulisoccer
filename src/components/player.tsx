@@ -11,12 +11,13 @@ interface PlayerProps {
 export const Player: React.FC<PlayerProps> = ({ filename, name, position, number, grade }) => {
   // support jpg, png
   const [imgExt, setImgExt] = React.useState<'jpg' | 'png'>('jpg');
-  const imageSrc = `/src/assets/player/${filename}.${imgExt}`;
+  const base = import.meta.env.BASE_URL || '/';
+  const imageSrc = `${base}/assets/player/${filename}.${imgExt}`;
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (imgExt === 'jpg') {
       setImgExt('png');
     } else {
-      e.currentTarget.src = "/src/assets/cat.jpg"; // fallback
+      e.currentTarget.src = `${base}/assets/cat.jpg`; // fallback
     }
   };
   return (
