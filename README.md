@@ -17,8 +17,8 @@ This project is developed with Vite, React, TypeScript, and TailwindCSS.
    ```bash
    npm run build
    ```
-4. Preview the production build:
+4. Deployment:
    ```bash
-   npm run preview
+   npm run deploy
    ```
 
