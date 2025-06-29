@@ -12,7 +12,7 @@ export function Sidebar() {
     { label: '🎖️ Retired Players', path: '/retired_players' },
     { label: '🥅 Top Scorers', path: '/scorers' },
     { label: '📊 Match Stats', path: '/matches' },
-    { label: '💬 Forum', path: '/forum' },
+    // { label: '💬 Forum', path: '/forum' },
     { label: '👔 Jersey', path: '/jersey' },         
     { label: '📸 Team moments', path: '/moments' }, 
   ];

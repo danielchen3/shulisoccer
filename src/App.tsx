@@ -25,7 +25,7 @@ export default function App() {
                 <Route path="/retired_players" element={<RetiredPlayersBoard />} />
                 <Route path="/scorers" element={<TopScorers />} />
                 <Route path="/matches" element={<MatchStats />} />
-                <Route path="/forum" element={<Forum />} />
+                {/* <Route path="/forum" element={<Forum />} /> */}
                 <Route path="/player/:filename" element={<PlayerDetail />} />
                 <Route path="/jersey" element={<Jersey />} />
                 <Route path="/moments" element={<TeamMoments />} />
