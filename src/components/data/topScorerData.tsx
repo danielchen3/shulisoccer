@@ -17,4 +17,7 @@ export const topScorers: TopScorer[] = [
   { name: "潘雷", goals: 1 },
   { name: "彭奕豪", goals: 1 },
   { name: "吴嘉木", goals: 1 },
+  { name: "胡嘉健", goals: 1 },
+  { name: "吕派", goals: 5 },
+  { name: "王季平", goals: 1 },
 ];
