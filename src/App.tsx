@@ -6,6 +6,8 @@ import { MatchStats } from './components/MatchStats'
 import { TopScorers } from './components/TopScorers'
 import { NewsBoard } from './components/NewsBoard'
 import { PlayerDetail } from './components/PlayerDetail'
+import { Jersey } from './components/Jersey'
+import { TeamMoments } from './components/TeamMoments'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 export default function App() {
@@ -25,6 +27,8 @@ export default function App() {
                 <Route path="/matches" element={<MatchStats />} />
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/player/:filename" element={<PlayerDetail />} />
+                <Route path="/jersey" element={<Jersey />} />
+                <Route path="/moments" element={<TeamMoments />} />
               </Routes>
             </div>
           </div>

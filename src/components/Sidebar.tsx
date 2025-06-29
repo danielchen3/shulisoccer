@@ -13,6 +13,8 @@ export function Sidebar() {
     { label: '🥅 Top Scorers', path: '/scorers' },
     { label: '📊 Match Stats', path: '/matches' },
     { label: '💬 Forum', path: '/forum' },
+    { label: '👔 Jersey', path: '/jersey' },         
+    { label: '📸 Team moments', path: '/moments' }, 
   ];
 
   return (
