@@ -39,7 +39,7 @@ export function TopScorers() {
                     {lastRank <= 3 ? medal[lastRank - 1] : lastRank}
                   </td>
                   <td className="py-2 px-4">{scorer.name}</td>
-                  <td className="py-2 px-4 text-right">{scorer.goals} 球</td>
+                  <td className="py-2 px-4 text-right">{scorer.goals}</td>
                 </tr>
               );
             })}

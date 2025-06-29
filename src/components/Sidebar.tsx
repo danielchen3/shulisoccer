@@ -9,7 +9,7 @@ export function Sidebar() {
   const items = [
     { label: '🏠 News', path: '/' },
     { label: '👥 Players', path: '/players' },
-    { label: '🎖️ Retired Players', path: '/retired_players' },
+    { label: '🎖️ Reserved/Retired', path: '/retired_players' },
     { label: '🥅 Top Scorers', path: '/scorers' },
     { label: '📊 Match Stats', path: '/matches' },
     // { label: '💬 Forum', path: '/forum' },
