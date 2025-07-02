@@ -13,7 +13,7 @@ export function TopScorers() {
     <div>
       <h2 className="text-2xl font-bold mb-6 text-gray-900">射手榜</h2>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white/80 rounded-lg shadow">
+        <table className="min-w-full bg-white/80 rounded-lg shadow text-black">
           <thead>
             <tr className="text-gray-600 border-b">
               <th className="py-3 px-4 text-left">排名</th>
@@ -33,7 +33,7 @@ export function TopScorers() {
                   key={scorer.name}
                   className={`border-b last:border-0 ${
                     lastRank <= 3 ? "bg-yellow-50 font-bold" : ""
-                  }`}
+                  } text-black`}
                 >
                   <td className="py-2 px-4">
                     {lastRank <= 3 ? medal[lastRank - 1] : lastRank}
