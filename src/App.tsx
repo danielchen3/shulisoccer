@@ -1,7 +1,6 @@
 import { Sidebar } from './components/Sidebar'
 import { PlayersBoard } from './components/PlayersBoard'
 import { RetiredPlayersBoard } from './components/RetiredPlayersBoard'
-import { Forum } from './components/Forum'
 import { MatchStats } from './components/MatchStats'
 import { TopScorers } from './components/TopScorers'
 import { NewsBoard } from './components/NewsBoard'
