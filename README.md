@@ -1,6 +1,3 @@
-## About
-This is the repository for the Shuli College soccer team at SUSTech.
-
 ## Tech Stack
 This project is developed with Vite, React, TypeScript, and TailwindCSS.
 
