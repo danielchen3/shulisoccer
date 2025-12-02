@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { getBaseUrl } from "../../utils/baseUrl";
 
 interface PlayerImageProps {
@@ -32,15 +32,23 @@ export function PlayerImage({
   const base = getBaseUrl();
   const [imgExt, setImgExt] = React.useState<"jpg" | "png">("jpg");
 
+  // Reset extension to 'jpg' when filename changes
+  useEffect(() => {
+    setImgExt("jpg");
+  }, [filename]);
+
   const imageSrc = `${base}assets/${folder}/${filename}.${imgExt}`;
 
-  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (imgExt === "jpg") {
-      setImgExt("png");
-    } else {
-      e.currentTarget.src = `${base}assets/${fallback}`;
-    }
-  };
+  const handleImgError = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      if (imgExt === "jpg") {
+        setImgExt("png");
+      } else {
+        e.currentTarget.src = `${base}assets/${fallback}`;
+      }
+    },
+    [imgExt, base, fallback]
+  );
 
   return (
     <img
