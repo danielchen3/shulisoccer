@@ -1,6 +1,6 @@
-import React from "react";
 import { goalkeeper, defender, midfield, forward } from "./data/playerlist";
 import { useNavigate } from "react-router-dom";
+import { PlayerImage } from "./shared/PlayerImage";
 
 const positionMap = [
   { label: "守门员", data: goalkeeper },
@@ -10,28 +10,7 @@ const positionMap = [
 ];
 
 export function PlayersBoard() {
-  const base = import.meta.env.BASE_URL || '/';
   const navigate = useNavigate();
-
-  function PlayerImg({ filename }: { filename: string }) {
-    const [imgExt, setImgExt] = React.useState<'jpg' | 'png'>('jpg');
-    const imageSrc = `${base}assets/player/${filename}.${imgExt}`;
-    const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      if (imgExt === 'jpg') {
-        setImgExt('png');
-      } else {
-        e.currentTarget.src = `${base}assets/cat.jpg`;
-      }
-    };
-    return (
-      <img
-        src={imageSrc}
-        alt={filename}
-        className="w-8 h-8 rounded-full mx-auto"
-        onError={handleImgError}
-      />
-    );
-  }
 
   return (
     <div className="bg-white/80 p-4 rounded-lg">
@@ -63,7 +42,7 @@ export function PlayersBoard() {
                     <td className="px-2 py-1 text-gray-900">{p.position}</td>
                     <td className="px-2 py-1 text-gray-900">{p.number}</td>
                     <td className="px-2 py-1">
-                      <PlayerImg filename={p.filename} />
+                      <PlayerImage filename={p.filename} />
                     </td>
                     <td className="px-2 py-1 text-gray-900">{p.name}</td>
                     <td className="px-2 py-1 text-gray-900">{p.starts ?? "--"}</td>

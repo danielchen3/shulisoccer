@@ -1,10 +1,12 @@
+import { getBaseUrl } from "../../utils/baseUrl";
+
 export interface NewsItem {
   date: string;
   content: string;
   image?: string;
 }
 
-const base = import.meta.env.BASE_URL || '/';
+const base = getBaseUrl();
 
 export const newsList: NewsItem[] = [
   {

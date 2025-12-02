@@ -1,6 +1,6 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { goalkeeper, defender, midfield, forward } from "./data/playerlist";
+import { PlayerImage } from "./shared/PlayerImage";
 
 const allPlayers = [...goalkeeper, ...defender, ...midfield, ...forward];
 
@@ -8,15 +8,7 @@ export function PlayerDetail() {
   const { filename } = useParams();
   const player = allPlayers.find(p => p.filename === filename);
 
-  const base = import.meta.env.BASE_URL || '/';
-  const [imgExt, setImgExt] = React.useState<'jpg' | 'png'>('jpg');
   if (!player) return <div className="p-8">未找到该球员</div>;
-
-  const imageSrc = `${base}assets/player/${player.filename}.${imgExt}`;
-  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (imgExt === 'jpg') setImgExt('png');
-    else e.currentTarget.src = `${base}assets/sydney.png`;
-  };
 
   return (
     <div className="bg-gray-50 p-8 rounded-lg flex flex-row items-center justify-between max-w-4xl mx-auto mt-8">
@@ -38,11 +30,11 @@ export function PlayerDetail() {
           <div>惯用脚：{player.foot ?? "--"}</div>
         </div>
       </div>
-      <img
-        src={imageSrc}
+      <PlayerImage
+        filename={player.filename}
         alt={player.name}
-        onError={handleImgError}
         className="w-48 h-48 object-cover rounded-lg ml-8"
+        fallback="sydney.png"
       />
     </div>
   );

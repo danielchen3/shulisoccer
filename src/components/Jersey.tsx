@@ -1,5 +1,7 @@
+import { getBaseUrl } from "../utils/baseUrl";
+
 export function Jersey() {
-  const base = import.meta.env.BASE_URL || '/';
+  const base = getBaseUrl();
   // 直接使用真实文件名
   const jerseyFiles = [
     "主场.jpg",
