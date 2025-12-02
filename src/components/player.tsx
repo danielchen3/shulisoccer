@@ -1,4 +1,4 @@
-import React from "react";
+import { PlayerImage } from "./shared/PlayerImage";
 
 interface PlayerProps {
   filename: string;
@@ -10,26 +10,16 @@ interface PlayerProps {
   foot?: string;
 }
 
-export const Player: React.FC<PlayerProps> = ({
+export const Player = ({
   filename, name, position, age, height, weight, foot
-}) => {
-  const [imgExt, setImgExt] = React.useState<'jpg' | 'png'>('jpg');
-  const base = import.meta.env.BASE_URL || '/';
-  const imageSrc = `${base}assets/retired/${filename}.${imgExt}`;
-  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (imgExt === 'jpg') {
-      setImgExt('png');
-    } else {
-      e.currentTarget.src = `${base}assets/cat.jpg`;
-    }
-  };
+}: PlayerProps) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center w-72 transition-transform hover:scale-105 hover:shadow-2xl">
       <div className="relative mb-4">
-        <img
-          src={imageSrc}
+        <PlayerImage
+          filename={filename}
           alt={name}
-          onError={handleImgError}
+          folder="retired"
           className="w-36 h-36 object-cover rounded-full border-4 border-yellow-200 shadow"
         />
       </div>

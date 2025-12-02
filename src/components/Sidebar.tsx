@@ -1,10 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { getBaseUrl } from "../utils/baseUrl";
 
 export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const base = import.meta.env.BASE_URL || '/';
+  const base = getBaseUrl();
 
   const items = [
     { label: '🏠 News', path: '/' },

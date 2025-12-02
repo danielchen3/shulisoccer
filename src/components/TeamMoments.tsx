@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
+import { getBaseUrl } from '../utils/baseUrl';
 
 export function TeamMoments() {
-  const base = import.meta.env.BASE_URL || '/';
+  const base = getBaseUrl();
   const photoCount = 18;
 
   const thumbs = Array.from({ length: photoCount }, (_, i) => `${base}assets/photo/thumbs/${i + 1}.webp`);
