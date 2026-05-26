@@ -1,6 +1,14 @@
-import { matchStatsData } from "./data/matchStatsData";
+import { useCloudData } from "../hooks/useCloudData";
+import { fetchMatchStats, type MatchGroup } from "../api";
 
 export function MatchStats() {
+  const { data, loading, error } = useCloudData<MatchGroup[]>(fetchMatchStats);
+
+  if (loading) return <div className="p-8 text-gray-500">加载中...</div>;
+  if (error) return <div className="p-8 text-red-500">数据加载失败</div>;
+
+  const matchStatsData = data ?? [];
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-6 text-gray-900">比赛统计</h2>
@@ -43,9 +51,9 @@ export function MatchStats() {
                 )}
                 <span className="flex-1"></span>
                 <span className="flex items-center min-w-[220px]">
-                <span className="text-left w-24">{event.left}</span>
-                <span className="inline-block w-12 text-center">{event.score}</span>
-                <span className="text-right w-24">{event.right}</span>
+                  <span className="text-left w-24">{event.left}</span>
+                  <span className="inline-block w-12 text-center">{event.score}</span>
+                  <span className="text-right w-24">{event.right}</span>
                 </span>
               </div>
             ))}

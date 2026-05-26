@@ -1,13 +1,16 @@
 import { useParams } from "react-router-dom";
-import { goalkeeper, defender, midfield, forward } from "./data/playerlist";
 import { PlayerImage } from "./shared/PlayerImage";
-
-const allPlayers = [...goalkeeper, ...defender, ...midfield, ...forward];
+import { useCloudData } from "../hooks/useCloudData";
+import { fetchPlayers, type Player } from "../api";
 
 export function PlayerDetail() {
   const { filename } = useParams();
-  const player = allPlayers.find(p => p.filename === filename);
+  const { data, loading, error } = useCloudData<Player[]>(fetchPlayers);
 
+  if (loading) return <div className="p-8 text-gray-500">加载中...</div>;
+  if (error) return <div className="p-8 text-red-500">数据加载失败</div>;
+
+  const player = (data ?? []).find((p) => p.filename === filename);
   if (!player) return <div className="p-8">未找到该球员</div>;
 
   return (

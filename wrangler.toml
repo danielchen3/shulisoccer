@@ -1,0 +1,9 @@
+name = "shulisoccer"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shulisoccer"
+database_id = "318b6326-ccf8-46e8-9809-9a320978ea31"
+migrations_dir = "migrations"

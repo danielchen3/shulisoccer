@@ -1,6 +1,6 @@
 import { PlayerImage } from "./shared/PlayerImage";
 
-interface PlayerProps {
+interface PlayerCardProps {
   filename: string;
   name: string;
   position: string;
@@ -10,9 +10,9 @@ interface PlayerProps {
   foot?: string;
 }
 
-export const Player = ({
+export const PlayerCard = ({
   filename, name, position, age, height, weight, foot
-}: PlayerProps) => {
+}: PlayerCardProps) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center w-72 transition-transform hover:scale-105 hover:shadow-2xl">
       <div className="relative mb-4">

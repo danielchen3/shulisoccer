@@ -1,11 +1,17 @@
-import { topScorers } from "./data/topScorerData";
+import { useCloudData } from "../hooks/useCloudData";
+import { fetchTopScorers, type TopScorer } from "../api";
 
 const medal = ["🥇", "🥈", "🥉"];
 
 export function TopScorers() {
-  const sorted = [...topScorers].sort((a, b) => b.goals - a.goals);
+  const { data, loading, error } = useCloudData<TopScorer[]>(fetchTopScorers);
 
-  let lastGoals = null;
+  if (loading) return <div className="p-8 text-gray-500">加载中...</div>;
+  if (error) return <div className="p-8 text-red-500">数据加载失败</div>;
+
+  const sorted = [...(data ?? [])].sort((a, b) => b.goals - a.goals);
+
+  let lastGoals: number | null = null;
   let lastRank = 0;
   let realRank = 0;
 
@@ -30,7 +36,7 @@ export function TopScorers() {
               }
               return (
                 <tr
-                  key={scorer.name}
+                  key={scorer.name + idx}
                   className={`border-b last:border-0 ${
                     lastRank <= 3 ? "bg-yellow-50 font-bold" : ""
                   } text-black`}
