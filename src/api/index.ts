@@ -34,6 +34,7 @@ export interface RetiredPlayer {
   height?: number;
   weight?: number;
   foot?: string;
+  goals?: number;
 }
 
 export interface MatchEvent {
