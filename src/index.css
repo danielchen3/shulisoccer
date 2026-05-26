@@ -1,90 +1,68 @@
 @import "tailwindcss";
 
+@theme {
+  /* 树礼黄主品牌色 */
+  --color-brand-50:  #fffbea;
+  --color-brand-100: #fff3c4;
+  --color-brand-200: #fce588;
+  --color-brand-300: #fadb5f;
+  --color-brand-400: #f7c948;
+  --color-brand-500: #f0b429;
+  --color-brand-600: #de911d;
+  --color-brand-700: #cb6e17;
+  --color-brand-800: #b44d12;
+  --color-brand-900: #8d2b0b;
+
+  /* 中性 ink 系列 */
+  --color-ink:       #0a0a0a;
+  --color-ink-soft:  #171717;
+  --color-paper:     #fafafa;
+  --color-paper-2:   #f5f5f5;
+
+  /* 字体族 */
+  --font-display: "Anton", "Bebas Neue", "Helvetica Neue", "Arial Narrow",
+                  "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-sans:    "Inter", "Helvetica Neue", "Arial", "PingFang SC",
+                  "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: var(--color-ink);
+  background-color: var(--color-paper);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 大标题统一用 display 字体 */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-/* 隐形 scrollbar */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* 隐形 scrollbar (保留) */
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2); /* 半透明 */
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 9999px;
-  border: none;
 }
-
-/* Firefox */
 .scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
+
+/* 阻止图片在 hover 缩放时被父容器 overflow 截断的兜底 */
+img { -webkit-user-drag: none; }

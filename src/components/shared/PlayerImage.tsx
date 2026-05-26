@@ -12,7 +12,7 @@ interface PlayerImageProps {
   folder?: string;
   /**
    * The fallback image path (relative to assets/) when both jpg and png fail.
-   * Defaults to "cat.jpg".
+   * Defaults to "sydney.png".
    */
   fallback?: string;
 }
@@ -27,7 +27,7 @@ export function PlayerImage({
   alt,
   className = "w-8 h-8 rounded-full mx-auto",
   folder = "player",
-  fallback = "cat.jpg",
+  fallback = "sydney.png",
 }: PlayerImageProps) {
   const base = getBaseUrl();
   const [imgExt, setImgExt] = React.useState<"jpg" | "png">("jpg");

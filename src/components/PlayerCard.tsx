@@ -10,50 +10,46 @@ interface PlayerCardProps {
   foot?: string;
 }
 
-export const PlayerCard = ({
-  filename, name, position, age, height, weight, foot
-}: PlayerCardProps) => {
+export function PlayerCard({
+  filename, name, position, age, height, weight, foot,
+}: PlayerCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center w-72 transition-transform hover:scale-105 hover:shadow-2xl">
-      <div className="relative mb-4">
+    <article className="group bg-white border border-black/5 overflow-hidden hover:shadow-xl transition-shadow">
+      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-brand-100 to-brand-300">
         <PlayerImage
           filename={filename}
           alt={name}
           folder="retired"
-          className="w-36 h-36 object-cover rounded-full border-4 border-yellow-200 shadow"
+          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink to-transparent" />
+        <span className="absolute top-3 left-3 bg-brand-500 text-ink text-[10px] font-bold uppercase tracking-widest px-2 py-1">
+          Legend
+        </span>
       </div>
-      <div className="text-gray-900 text-xl font-extrabold mb-2 tracking-wide">{name}</div>
-      <ul className="text-gray-700 text-base space-y-1 text-center">
-        <li>
-          <span className="font-semibold text-yellow-700">位置：</span>
+
+      <div className="p-4">
+        <div className="font-display text-xl uppercase">{name}</div>
+        <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">
           {position}
-        </li>
-        {age !== undefined && (
-          <li>
-            <span className="font-semibold text-yellow-700">年龄：</span>
-            {age}
-          </li>
-        )}
-        {height !== undefined && (
-          <li>
-            <span className="font-semibold text-yellow-700">身高：</span>
-            {height} cm
-          </li>
-        )}
-        {weight !== undefined && (
-          <li>
-            <span className="font-semibold text-yellow-700">体重：</span>
-            {weight} kg
-          </li>
-        )}
-        {foot && (
-          <li>
-            <span className="font-semibold text-yellow-700">惯用脚：</span>
-            {foot}
-          </li>
-        )}
-      </ul>
-    </div>
+        </div>
+
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700">
+          {age !== undefined && <Row label="年龄" value={`${age}`} />}
+          {height !== undefined && <Row label="身高" value={`${height} cm`} />}
+          {weight !== undefined && <Row label="体重" value={`${weight} kg`} />}
+          {foot && <Row label="惯用脚" value={foot} />}
+        </dl>
+      </div>
+    </article>
   );
-};
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <>
+      <dt className="text-gray-400 uppercase tracking-wider">{label}</dt>
+      <dd className="text-ink font-semibold text-right">{value}</dd>
+    </>
+  );
+}

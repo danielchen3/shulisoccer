@@ -13,7 +13,17 @@ dist-ssr
 .claude/
 .github/
 
+main.png
+players.png
+
+database_already_inserted_data.sql
+
 ARCHITECTURE.md
+
+球员信息统计.xlsx
+
+# 一次性数据导入脚本（依赖 .xlsx 原文件，仓库里只保留 migrations 结果）
+scripts/
 
 # Logs
 logs
