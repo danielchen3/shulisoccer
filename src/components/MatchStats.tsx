@@ -87,21 +87,24 @@ function parseScore(score: string) {
   return { left: parts[0] ?? "0", right: parts[1] ?? "0" };
 }
 
-function TeamName({ name }: { name: string }) {
+function TeamName({ name, side }: { name: string; side: "left" | "right" }) {
   const base = getBaseUrl();
   const logo = TEAM_LOGO[name];
   const isOurs = name === OUR_TEAM;
 
+  const logoImg = logo && (
+    <img
+      src={`${base}${logo}`}
+      alt=""
+      className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0"
+    />
+  );
+
   return (
     <span className="inline-flex items-center gap-2">
-      {logo && (
-        <img
-          src={`${base}${logo}`}
-          alt=""
-          className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0"
-        />
-      )}
+      {side === "left" && logoImg}
       <span className={isOurs ? "text-brand-500 font-bold" : ""}>{name}</span>
+      {side === "right" && logoImg}
     </span>
   );
 }
@@ -122,7 +125,7 @@ function MatchRow({ event, groupIdx, eventIdx }: { event: MatchEvent; groupIdx: 
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
           <div className="flex justify-end font-semibold text-ink truncate">
-            <TeamName name={event.left} />
+            <TeamName name={event.left} side="left" />
           </div>
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center gap-2 font-display text-2xl sm:text-3xl">
@@ -137,7 +140,7 @@ function MatchRow({ event, groupIdx, eventIdx }: { event: MatchEvent; groupIdx: 
             )}
           </div>
           <div className="flex justify-start font-semibold text-ink truncate">
-            <TeamName name={event.right} />
+            <TeamName name={event.right} side="right" />
           </div>
         </div>
 

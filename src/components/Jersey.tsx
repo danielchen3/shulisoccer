@@ -26,6 +26,13 @@ const SEASONS: { title: string; subtitle: string; jerseys: JerseyItem[] }[] = [
       { file: "守门员客场.jpg", label: "GK Away", zh: "守门员客场" },
     ],
   },
+  {
+    title: "2023/24 Season",
+    subtitle: "23-24 赛季球衣",
+    jerseys: [
+      { file: "23-24-jersey.jpg", label: "Kit", zh: "球员球衣" },
+    ],
+  },
 ];
 
 export function Jersey() {

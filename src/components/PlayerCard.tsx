@@ -1,7 +1,6 @@
 import { PlayerImage } from "./shared/PlayerImage";
 
 interface PlayerCardProps {
-  filename: string;
   name: string;
   position: string;
   age?: number;
@@ -11,13 +10,14 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({
-  filename, name, position, age, height, weight, foot,
+  name, position, age, height, weight, foot,
 }: PlayerCardProps) {
   return (
     <article className="group bg-white border border-black/5 overflow-hidden hover:shadow-xl transition-shadow">
       <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-brand-100 to-brand-300">
         <PlayerImage
-          filename={filename}
+          name={name}
+          variant={2}
           alt={name}
           folder="retired"
           className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"

@@ -1,4 +1,3 @@
-import { PlayerCard } from "./PlayerCard";
 import { PageHero } from "./shared/PageHero";
 import { useCloudData } from "../hooks/useCloudData";
 import { fetchRetiredPlayers, type RetiredPlayer } from "../api";
@@ -14,15 +13,55 @@ export function RetiredPlayersBoard() {
         title="Legends"
         subtitle="历届为树礼书院征战过的老队员，他们的精神延续在球队的每一场比赛。"
       />
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-12 lg:py-16">
+      <section className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10 py-12 lg:py-16">
         {loading && <div className="text-gray-500">加载中...</div>}
         {error && <div className="text-red-500">数据加载失败</div>}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6">
-          {retired.map((p) => (
-            <PlayerCard key={p.name} {...p} />
+
+        <div className="divide-y divide-black/5">
+          {retired.map((p, idx) => (
+            <LegendRow key={p.name} player={p} index={idx} />
           ))}
         </div>
       </section>
+    </div>
+  );
+}
+
+function LegendRow({ player, index }: { player: RetiredPlayer; index: number }) {
+  const tags = [
+    player.position,
+    player.height ? `${player.height}cm` : null,
+    player.foot ?? null,
+  ].filter(Boolean);
+
+  return (
+    <div className="flex items-center gap-4 sm:gap-6 py-4 group hover:bg-paper-2/60 transition-colors -mx-3 px-3 rounded">
+      <span className="font-display text-2xl text-black/10 w-8 text-right shrink-0">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline gap-3">
+          <span className="font-display text-lg sm:text-xl uppercase truncate">
+            {player.name}
+          </span>
+          {player.goals !== undefined && player.goals > 0 && (
+            <span className="text-xs text-brand-600 font-bold shrink-0">
+              {player.goals} goals
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 mt-0.5">
+          {tags.map((t) => (
+            <span
+              key={t}
+              className="text-[10px] text-gray-400 uppercase tracking-widest"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

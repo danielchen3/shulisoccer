@@ -69,7 +69,8 @@ export function PlayerDetail() {
             {/* 右：照片 */}
             <div className="relative aspect-[3/4] max-h-[360px] rounded-md overflow-hidden bg-gradient-to-b from-slate-600/40 to-slate-800/60 mx-auto lg:mx-0 w-full max-w-[280px]">
               <PlayerImage
-                filename={player.filename}
+                name={player.name}
+                variant={1}
                 alt={player.name}
                 className="absolute inset-0 w-full h-full object-cover object-top"
               />

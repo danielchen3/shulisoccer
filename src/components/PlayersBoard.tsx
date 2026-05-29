@@ -92,6 +92,34 @@ export function PlayersBoard() {
             );
           }
         )}
+
+        {/* Manager */}
+        {filter === "all" && (
+          <div className="mb-14 last:mb-0">
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 className="font-display text-2xl sm:text-3xl uppercase">Manager</h2>
+              <span className="text-sm text-gray-500">教练</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-9">
+              <div className="relative bg-ink overflow-hidden rounded-md">
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img
+                    src={`${getBaseUrl()}assets/background.jpg`}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-end justify-center pt-6 px-4">
+                    <img
+                      src={`${getBaseUrl()}assets/player/教练.png`}
+                      alt="Manager"
+                      className="w-[82%] h-[88%] object-cover object-top"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );
@@ -137,7 +165,8 @@ function PlayerTile({ player }: { player: Player }) {
         />
         <div className="absolute inset-0 flex items-end justify-center pt-6 px-4">
           <PlayerImage
-            filename={player.filename}
+            name={player.name}
+            variant={2}
             alt={player.name}
             className="w-[82%] h-[88%] object-cover object-top transition-transform duration-500 group-hover:scale-105"
           />
@@ -148,17 +177,17 @@ function PlayerTile({ player }: { player: Player }) {
       {/* 姓名 - 居中，名在上姓在下 */}
       <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 z-10 transition-opacity duration-300 group-hover:opacity-0 text-center">
         {givenName && (
-          <div className="text-white/60 text-[10px] sm:text-xs tracking-wider truncate mb-1">
+          <div className="text-white/60 text-[10px] sm:text-xs tracking-wider truncate mb-0.5">
             {givenName}
           </div>
         )}
-        <span className="inline-block w-6 h-[2px] bg-brand-500 mb-1" />
         <div
           className="font-display-alt text-xl sm:text-2xl lg:text-3xl text-white uppercase truncate leading-tight"
           style={{ transform: "skewY(-4deg)", fontWeight: 700 }}
         >
           {surname}
         </div>
+        <span className="inline-block w-6 h-[2px] bg-brand-500 mt-1" />
       </div>
 
       {/* Hover overlay */}
@@ -167,17 +196,17 @@ function PlayerTile({ player }: { player: Player }) {
           {player.position}
         </div>
         {givenName && (
-          <div className="text-white/50 text-xs tracking-wider mb-1 text-center">
+          <div className="text-white/50 text-xs tracking-wider mb-0.5 text-center">
             {givenName}
           </div>
         )}
-        <span className="inline-block w-6 h-[2px] bg-brand-500 mb-1" />
         <div
-          className="font-display-alt text-2xl lg:text-3xl text-white uppercase leading-tight mb-4 text-center"
+          className="font-display-alt text-2xl lg:text-3xl text-white uppercase leading-tight text-center"
           style={{ transform: "skewY(-4deg)", fontWeight: 700 }}
         >
           {surname}
         </div>
+        <span className="inline-block w-6 h-[2px] bg-brand-500 mt-1 mb-4" />
         <div className="grid grid-cols-3 gap-1 border-t border-white/15 pt-3">
           <div className="text-center">
             <div className="font-display text-xl sm:text-2xl text-brand-400">{totalApps}</div>

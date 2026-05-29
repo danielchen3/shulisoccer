@@ -18,6 +18,8 @@ players.png
 player.png
 name.png
 
+compress_thumbs.py
+
 database_already_inserted_data.sql
 
 ARCHITECTURE.md

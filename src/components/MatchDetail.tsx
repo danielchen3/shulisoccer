@@ -71,7 +71,7 @@ export function MatchDetail() {
 
           {/* Scoreboard */}
           <div className="flex items-center justify-center gap-6 sm:gap-10 mb-2">
-            <TeamBadge name={event.left} base={base} />
+            <TeamBadge name={event.left} base={base} side="left" />
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-3 font-display text-4xl sm:text-5xl lg:text-6xl">
                 <span>{score.left}</span>
@@ -84,7 +84,7 @@ export function MatchDetail() {
                 </div>
               )}
             </div>
-            <TeamBadge name={event.right} base={base} />
+            <TeamBadge name={event.right} base={base} side="right" />
           </div>
 
           {event.video && (
@@ -151,7 +151,7 @@ export function MatchDetail() {
   );
 }
 
-function TeamBadge({ name, base }: { name: string; base: string }) {
+function TeamBadge({ name, base, side }: { name: string; base: string; side: "left" | "right" }) {
   const logo = TEAM_LOGO[name];
   const isOurs = name === OUR_TEAM;
 

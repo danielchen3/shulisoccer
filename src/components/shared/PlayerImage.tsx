@@ -2,58 +2,44 @@ import React, { useCallback, useEffect } from "react";
 import { getBaseUrl } from "../../utils/baseUrl";
 
 interface PlayerImageProps {
-  filename: string;
+  /** Chinese name of the player (e.g. "张文豪") */
+  name: string;
+  /** 1 = detail page, 2 = listing/card page */
+  variant?: 1 | 2;
   alt?: string;
   className?: string;
-  /**
-   * The folder under assets/ where the image is located.
-   * Defaults to "player".
-   */
   folder?: string;
-  /**
-   * The fallback image path (relative to assets/) when both jpg and png fail.
-   * Defaults to "sydney.png".
-   */
   fallback?: string;
 }
 
-/**
- * A reusable player image component that handles:
- * - Trying .jpg first, then .png
- * - Falling back to a default image if both fail
- */
 export function PlayerImage({
-  filename,
+  name,
+  variant = 2,
   alt,
   className = "w-8 h-8 rounded-full mx-auto",
   folder = "player",
-  fallback = "sydney.png",
+  fallback = "pep.png",
 }: PlayerImageProps) {
   const base = getBaseUrl();
-  const [imgExt, setImgExt] = React.useState<"jpg" | "png">("jpg");
+  const [failed, setFailed] = React.useState(false);
 
-  // Reset extension to 'jpg' when filename changes
   useEffect(() => {
-    setImgExt("jpg");
-  }, [filename]);
+    setFailed(false);
+  }, [name, variant]);
 
-  const imageSrc = `${base}assets/${folder}/${filename}.${imgExt}`;
+  const cleanName = name.replace("(C)", "").trim();
+  const imageSrc = failed
+    ? `${base}assets/${folder}/${fallback}`
+    : `${base}assets/${folder}/${cleanName}${variant}.png`;
 
-  const handleImgError = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      if (imgExt === "jpg") {
-        setImgExt("png");
-      } else {
-        e.currentTarget.src = `${base}assets/${fallback}`;
-      }
-    },
-    [imgExt, base, fallback]
-  );
+  const handleImgError = useCallback(() => {
+    setFailed(true);
+  }, []);
 
   return (
     <img
       src={imageSrc}
-      alt={alt ?? filename}
+      alt={alt ?? cleanName}
       className={className}
       onError={handleImgError}
     />
