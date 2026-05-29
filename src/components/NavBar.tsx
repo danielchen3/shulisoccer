@@ -22,9 +22,9 @@ export function NavBar() {
         {/* 左：logo + 名 */}
         <NavLink to="/" className="flex items-center gap-3 shrink-0">
           <img
-            src={`${base}assets/logo.jpg`}
+            src={`${base}assets/logo.png`}
             alt="Shuli"
-            className="w-10 h-10 object-cover rounded-full ring-2 ring-brand-500"
+            className="w-10 h-10 object-contain rounded-full ring-2 ring-brand-500"
           />
           <div className="hidden sm:flex flex-col leading-tight">
             <span className="font-display text-xl tracking-wider">SHULI FC</span>

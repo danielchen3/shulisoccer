@@ -60,36 +60,59 @@ function SeasonBlock({ group }: { group: MatchGroup }) {
   );
 }
 
+function parseScore(score: string) {
+  const penaltyMatch = score.match(/^(\d+)\s*:\s*(\d+)\s*\((\d+)\s*:\s*(\d+)\)$/);
+  if (penaltyMatch) {
+    return {
+      left: penaltyMatch[1],
+      right: penaltyMatch[2],
+      penaltyLeft: penaltyMatch[3],
+      penaltyRight: penaltyMatch[4],
+    };
+  }
+  const parts = score.split(":").map((s) => s.trim());
+  return { left: parts[0] ?? "0", right: parts[1] ?? "0" };
+}
+
 function MatchRow({ event }: { event: MatchEvent }) {
-  const [leftScore, rightScore] = event.score.split(":").map((s) => s.trim());
+  const score = parseScore(event.score);
 
   return (
     <div className="bg-white border border-black/5 hover:shadow-md transition-shadow">
-      <div className="p-4 flex items-center gap-3 sm:gap-6 flex-wrap">
+      <div className="p-4 grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-6">
         <span className="text-[10px] font-bold uppercase tracking-widest text-brand-700 bg-brand-50 px-2 py-1 min-w-[88px] text-center">
           {event.round}
         </span>
 
-        <div className="flex-1 grid grid-cols-3 items-center gap-2 min-w-[280px]">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
           <div className="text-right font-semibold text-ink truncate">{event.left}</div>
-          <div className="flex items-center justify-center gap-2 font-display text-2xl sm:text-3xl">
-            <span>{leftScore}</span>
-            <span className="text-gray-300">:</span>
-            <span>{rightScore}</span>
+          <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center gap-2 font-display text-2xl sm:text-3xl">
+              <span>{score.left}</span>
+              <span className="text-gray-300">:</span>
+              <span>{score.right}</span>
+            </div>
+            {"penaltyLeft" in score && (
+              <div className="text-xs text-gray-400 mt-0.5">
+                (penalties {score.penaltyLeft} : {score.penaltyRight})
+              </div>
+            )}
           </div>
           <div className="text-left font-semibold text-ink truncate">{event.right}</div>
         </div>
 
-        {event.video && (
-          <a
-            href={event.video.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-bold uppercase tracking-wider text-brand-700 hover:text-brand-500 transition-colors ml-auto"
-          >
-            ▶ {event.video.label}
-          </a>
-        )}
+        <div className="w-[100px] text-right">
+          {event.video && (
+            <a
+              href={event.video.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold uppercase tracking-wider text-brand-700 hover:text-brand-500 transition-colors"
+            >
+              ▶ {event.video.label}
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

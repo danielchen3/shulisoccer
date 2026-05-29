@@ -82,7 +82,7 @@ export function PlayersBoard() {
                   <span className="text-sm text-gray-500">{label}</span>
                   <span className="text-xs text-gray-400 ml-auto">{players.length} players</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-9">
                   {players.map((p) => (
                     <PlayerTile key={p.filename} player={p} />
                   ))}
@@ -98,66 +98,52 @@ export function PlayersBoard() {
 
 function PlayerTile({ player }: { player: Player }) {
   const navigate = useNavigate();
+  const displayName = player.name.replace("(C)", "").trim();
+  const isCaptain = player.name.includes("(C)");
+
   return (
     <button
       onClick={() => navigate(`/player/${player.filename}`)}
-      className="group relative bg-gradient-to-b from-paper-2 to-white border border-black/5 overflow-hidden text-left hover:shadow-xl transition-all"
+      className="group relative bg-ink overflow-hidden text-left transition-all hover:ring-2 hover:ring-brand-500 rounded-md"
     >
-      {/* 大球衣号水印 */}
-      <span
-        className="absolute -top-4 right-2 font-display text-[110px] lg:text-[140px] leading-none text-ink/5 pointer-events-none select-none"
-        aria-hidden
-      >
-        {player.number}
-      </span>
-
-      {/* 球员照片 */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-brand-100 to-brand-300">
-        <PlayerImage
-          filename={player.filename}
-          alt={player.name}
-          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-        />
-        {/* 底部黑色渐变 */}
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink to-transparent" />
-        {/* 号码 + 位置 */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 flex items-end justify-between">
-          <span className="text-white text-[10px] font-bold uppercase tracking-widest bg-brand-500 text-ink px-2 py-0.5">
-            #{player.number}
-          </span>
-          <span className="text-white/80 text-[10px] font-medium uppercase tracking-wider">
-            {player.position}
-          </span>
-        </div>
+      {/* 号码 */}
+      <div className="absolute top-3 right-3 z-10">
+        <span className="font-display text-3xl sm:text-4xl lg:text-5xl text-white leading-none">
+          {player.number}
+        </span>
       </div>
 
-      {/* 姓名块 */}
-      <div className="p-3 lg:p-4 border-t border-black/5 group-hover:bg-brand-50 transition-colors">
-        <div className="font-display text-lg lg:text-xl uppercase truncate">
-          {player.name.replace("(C)", "")}
-          {player.name.includes("(C)") && (
-            <span className="ml-1 text-[10px] align-middle bg-ink text-brand-400 px-1 py-0.5">
-              C
-            </span>
-          )}
+      {isCaptain && (
+        <span className="absolute top-3 left-3 z-10 bg-brand-500 text-ink text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
+          C
+        </span>
+      )}
+
+      {/* 球员照片 */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-slate-600/40 to-slate-800/60">
+        <div className="absolute inset-0 flex items-end justify-center pt-6 px-4">
+          <PlayerImage
+            filename={player.filename}
+            alt={player.name}
+            className="w-[82%] h-[88%] object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          />
         </div>
-        <div className="text-xs text-gray-500 uppercase tracking-wider truncate">
-          {player.enName ?? ""}
-        </div>
-        <div className="mt-2 flex items-center gap-4 text-[11px] text-gray-600">
-          <Stat label="出场" value={(player.starts ?? 0) + (player.subs ?? 0)} />
-          <Stat label="进球" value={player.goals ?? 0} />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink via-ink/70 to-transparent pointer-events-none" />
+      </div>
+
+      {/* 姓名 */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 z-10">
+        {player.enName && (
+          <div className="text-white/60 text-[10px] sm:text-xs uppercase tracking-wider truncate mb-0.5">
+            {player.enName.split(" ").slice(0, -1).join(" ")}
+          </div>
+        )}
+        <div className="font-display text-lg sm:text-xl lg:text-2xl text-white uppercase truncate leading-tight">
+          {player.enName
+            ? player.enName.split(" ").slice(-1)[0]
+            : displayName}
         </div>
       </div>
     </button>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="flex items-baseline gap-1">
-      <span className="font-display text-base text-ink">{value}</span>
-      <span className="text-gray-500">{label}</span>
-    </div>
   );
 }

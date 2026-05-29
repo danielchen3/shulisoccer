@@ -8,6 +8,7 @@ import { NewsBoard } from "./components/NewsBoard";
 import { PlayerDetail } from "./components/PlayerDetail";
 import { Jersey } from "./components/Jersey";
 import { TeamMoments } from "./components/TeamMoments";
+import { NewsDetail } from "./components/NewsDetail";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/scorers" element={<TopScorers />} />
             <Route path="/matches" element={<MatchStats />} />
             <Route path="/player/:filename" element={<PlayerDetail />} />
+            <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/jersey" element={<Jersey />} />
             <Route path="/moments" element={<TeamMoments />} />
           </Routes>

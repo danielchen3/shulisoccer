@@ -53,10 +53,11 @@ export interface MatchGroup {
 }
 
 export interface NewsItem {
-  id?: number;
+  id: number;
   date: string;
   content: string;
   image?: string;
+  body?: string;
 }
 
 export interface TopScorer {

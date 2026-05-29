@@ -26,50 +26,54 @@ export function PlayerDetail() {
     <div>
       {/* HERO */}
       <section className="relative bg-ink text-white overflow-hidden">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 items-stretch">
-          {/* 左：信息 */}
-          <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative z-10">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="py-6 lg:py-8">
             <Link
               to="/players"
-              className="text-xs text-white/60 hover:text-white uppercase tracking-widest mb-6 inline-flex items-center gap-2 self-start"
+              className="text-xs text-white/60 hover:text-white uppercase tracking-widest inline-flex items-center gap-2"
             >
               ← Back to Squad
             </Link>
-            <span className="text-brand-400 text-xs font-bold uppercase tracking-[0.3em] mb-3">
-              ▍ {GROUP_LABEL[player.positionGroup]} · {player.position}
-            </span>
-            <div className="flex items-baseline gap-4 mb-2">
-              <span className="font-display text-[140px] sm:text-[180px] leading-none text-brand-500">
-                {player.number}
-              </span>
-            </div>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl uppercase leading-[1.05] mb-2">
-              {player.name.replace("(C)", "")}
-              {player.name.includes("(C)") && (
-                <span className="ml-3 text-2xl align-middle bg-brand-500 text-ink px-2 py-1">
-                  C
-                </span>
-              )}
-            </h1>
-            <p className="text-white/60 text-lg uppercase tracking-wider mb-8">
-              {player.enName ?? ""} {player.nationalityFlag ?? ""}
-            </p>
-
-            <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 max-w-md">
-              <Headline label="出场" value={totalApps} />
-              <Headline label="首发" value={player.starts ?? 0} />
-              <Headline label="进球" value={player.goals ?? 0} />
-            </div>
           </div>
 
-          {/* 右：照片 */}
-          <div className="relative min-h-[400px] lg:min-h-[640px] bg-gradient-to-br from-brand-300 to-brand-500">
-            <PlayerImage
-              filename={player.filename}
-              alt={player.name}
-              className="absolute inset-0 w-full h-full object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-transparent to-transparent" />
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-end pb-10 lg:pb-14">
+            {/* 左：信息 */}
+            <div className="flex flex-col justify-end">
+              <span className="text-brand-400 text-xs font-bold uppercase tracking-[0.3em] mb-3">
+                ▍ {GROUP_LABEL[player.positionGroup]} · {player.position}
+              </span>
+              <div className="flex items-end gap-5 mb-2">
+                <span className="font-display text-[72px] sm:text-[88px] leading-none text-brand-500">
+                  {player.number}
+                </span>
+                <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl uppercase leading-[1.05] pb-2">
+                  {player.name.replace("(C)", "")}
+                  {player.name.includes("(C)") && (
+                    <span className="ml-2 text-base align-middle bg-brand-500 text-ink px-1.5 py-0.5">
+                      C
+                    </span>
+                  )}
+                </h1>
+              </div>
+              <p className="text-white/60 text-sm uppercase tracking-wider mb-6">
+                {player.enName ?? ""} {player.nationalityFlag ?? ""}
+              </p>
+
+              <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 max-w-sm">
+                <Headline label="出场" value={totalApps} />
+                <Headline label="首发" value={player.starts ?? 0} />
+                <Headline label="进球" value={player.goals ?? 0} />
+              </div>
+            </div>
+
+            {/* 右：照片 */}
+            <div className="relative aspect-[3/4] max-h-[360px] rounded-md overflow-hidden bg-gradient-to-b from-slate-600/40 to-slate-800/60 mx-auto lg:mx-0 w-full max-w-[280px]">
+              <PlayerImage
+                filename={player.filename}
+                alt={player.name}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+            </div>
           </div>
         </div>
       </section>
