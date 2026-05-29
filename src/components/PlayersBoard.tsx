@@ -110,7 +110,7 @@ export function PlayersBoard() {
                   />
                   <div className="absolute inset-0 flex items-end justify-center pt-6 px-4">
                     <img
-                      src={`${getBaseUrl()}assets/player/教练.png`}
+                      src={`${getBaseUrl()}assets/player/教练.webp`}
                       alt="Manager"
                       className="w-[82%] h-[88%] object-cover object-top"
                     />
@@ -168,6 +168,7 @@ function PlayerTile({ player }: { player: Player }) {
             name={player.name}
             variant={2}
             alt={player.name}
+            loading="lazy"
             className="w-[82%] h-[88%] object-cover object-top transition-transform duration-500 group-hover:scale-105"
           />
         </div>

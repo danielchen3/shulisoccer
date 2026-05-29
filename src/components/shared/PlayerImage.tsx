@@ -10,6 +10,7 @@ interface PlayerImageProps {
   className?: string;
   folder?: string;
   fallback?: string;
+  loading?: "lazy" | "eager";
 }
 
 export function PlayerImage({
@@ -19,6 +20,7 @@ export function PlayerImage({
   className = "w-8 h-8 rounded-full mx-auto",
   folder = "player",
   fallback = "pep.png",
+  loading,
 }: PlayerImageProps) {
   const base = getBaseUrl();
   const [failed, setFailed] = React.useState(false);
@@ -30,7 +32,7 @@ export function PlayerImage({
   const cleanName = name.replace("(C)", "").trim();
   const imageSrc = failed
     ? `${base}assets/${folder}/${fallback}`
-    : `${base}assets/${folder}/${cleanName}${variant}.png`;
+    : `${base}assets/${folder}/${cleanName}${variant}.webp`;
 
   const handleImgError = useCallback(() => {
     setFailed(true);
@@ -41,6 +43,7 @@ export function PlayerImage({
       src={imageSrc}
       alt={alt ?? cleanName}
       className={className}
+      loading={loading}
       onError={handleImgError}
     />
   );
