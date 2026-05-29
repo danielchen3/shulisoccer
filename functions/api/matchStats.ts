@@ -22,12 +22,14 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
     events: (JSON.parse(row.events) as Array<{
       round: string; left: string; score: string; right: string;
       videoLabel?: string; videoUrl?: string;
+      goals?: Array<{ minute: number; player: string; type: string }>;
     }>).map((e) => ({
       round: e.round,
       left: e.left,
       score: e.score,
       right: e.right,
       video: e.videoUrl ? { label: e.videoLabel!, url: e.videoUrl } : undefined,
+      goals: e.goals,
     })),
   }));
 

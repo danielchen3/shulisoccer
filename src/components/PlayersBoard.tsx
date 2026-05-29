@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PlayerImage } from "./shared/PlayerImage";
 import { useCloudData } from "../hooks/useCloudData";
 import { fetchPlayers, type Player } from "../api";
+import { getBaseUrl } from "../utils/baseUrl";
 
 const POSITION_GROUPS: { label: string; en: string; group: Player["positionGroup"] }[] = [
   { label: "守门员", en: "Goalkeepers", group: "goalkeeper" },
@@ -100,6 +101,14 @@ function PlayerTile({ player }: { player: Player }) {
   const navigate = useNavigate();
   const displayName = player.name.replace("(C)", "").trim();
   const isCaptain = player.name.includes("(C)");
+  const totalApps = (player.starts ?? 0) + (player.subs ?? 0);
+
+  const givenName = player.enName
+    ? player.enName.split(" ").slice(1).join(" ")
+    : "";
+  const surname = player.enName
+    ? player.enName.split(" ")[0]
+    : displayName;
 
   return (
     <button
@@ -108,7 +117,7 @@ function PlayerTile({ player }: { player: Player }) {
     >
       {/* 号码 */}
       <div className="absolute top-3 right-3 z-10">
-        <span className="font-display text-3xl sm:text-4xl lg:text-5xl text-white leading-none">
+        <span className="font-display text-3xl sm:text-4xl lg:text-5xl text-white/30 leading-none transition-colors group-hover:text-white/10">
           {player.number}
         </span>
       </div>
@@ -120,7 +129,12 @@ function PlayerTile({ player }: { player: Player }) {
       )}
 
       {/* 球员照片 */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-slate-600/40 to-slate-800/60">
+      <div className="relative aspect-[3/4] overflow-hidden">
+        <img
+          src={`${getBaseUrl()}assets/background.jpg`}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 flex items-end justify-center pt-6 px-4">
           <PlayerImage
             filename={player.filename}
@@ -131,17 +145,52 @@ function PlayerTile({ player }: { player: Player }) {
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink via-ink/70 to-transparent pointer-events-none" />
       </div>
 
-      {/* 姓名 */}
-      <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 z-10">
-        {player.enName && (
-          <div className="text-white/60 text-[10px] sm:text-xs uppercase tracking-wider truncate mb-0.5">
-            {player.enName.split(" ").slice(0, -1).join(" ")}
+      {/* 姓名 - 居中，名在上姓在下 */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 z-10 transition-opacity duration-300 group-hover:opacity-0 text-center">
+        {givenName && (
+          <div className="text-white/60 text-[10px] sm:text-xs tracking-wider truncate mb-1">
+            {givenName}
           </div>
         )}
-        <div className="font-display text-lg sm:text-xl lg:text-2xl text-white uppercase truncate leading-tight">
-          {player.enName
-            ? player.enName.split(" ").slice(-1)[0]
-            : displayName}
+        <span className="inline-block w-6 h-[2px] bg-brand-500 mb-1" />
+        <div
+          className="font-display-alt text-xl sm:text-2xl lg:text-3xl text-white uppercase truncate leading-tight"
+          style={{ transform: "skewY(-4deg)", fontWeight: 700 }}
+        >
+          {surname}
+        </div>
+      </div>
+
+      {/* Hover overlay */}
+      <div className="absolute inset-0 z-20 bg-ink/85 flex flex-col justify-end p-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+        <div className="text-brand-400 text-[10px] uppercase tracking-widest mb-1 text-center">
+          {player.position}
+        </div>
+        {givenName && (
+          <div className="text-white/50 text-xs tracking-wider mb-1 text-center">
+            {givenName}
+          </div>
+        )}
+        <span className="inline-block w-6 h-[2px] bg-brand-500 mb-1" />
+        <div
+          className="font-display-alt text-2xl lg:text-3xl text-white uppercase leading-tight mb-4 text-center"
+          style={{ transform: "skewY(-4deg)", fontWeight: 700 }}
+        >
+          {surname}
+        </div>
+        <div className="grid grid-cols-3 gap-1 border-t border-white/15 pt-3">
+          <div className="text-center">
+            <div className="font-display text-xl sm:text-2xl text-brand-400">{totalApps}</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Apps</div>
+          </div>
+          <div className="text-center">
+            <div className="font-display text-xl sm:text-2xl text-brand-400">{player.starts ?? 0}</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Starts</div>
+          </div>
+          <div className="text-center">
+            <div className="font-display text-xl sm:text-2xl text-brand-400">{player.goals ?? 0}</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Goals</div>
+          </div>
         </div>
       </div>
     </button>

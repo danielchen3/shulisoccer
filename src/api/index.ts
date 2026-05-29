@@ -37,12 +37,19 @@ export interface RetiredPlayer {
   goals?: number;
 }
 
+export interface MatchGoal {
+  minute: number;
+  player: string;
+  type: "goal" | "penalty";
+}
+
 export interface MatchEvent {
   round: string;
   left: string;
   score: string;
   right: string;
   video?: { label: string; url: string };
+  goals?: MatchGoal[];
 }
 
 export interface MatchGroup {

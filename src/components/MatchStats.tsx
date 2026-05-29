@@ -1,6 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import { PageHero } from "./shared/PageHero";
 import { useCloudData } from "../hooks/useCloudData";
 import { fetchMatchStats, type MatchGroup, type MatchEvent } from "../api";
+import { getBaseUrl } from "../utils/baseUrl";
+
+const TEAM_LOGO: Record<string, string> = {
+  "树礼书院": "assets/logo.png",
+  "致诚书院": "assets/Team/zhicheng.jpg",
+  "致仁书院": "assets/Team/zhiren.jpg",
+  "致新书院": "assets/Team/zhixin.jpg",
+  "树仁书院": "assets/Team/shuren.jpg",
+  "树德书院": "assets/Team/shude.jpg",
+};
+
+const OUR_TEAM = "树礼书院";
 
 export function MatchStats() {
   const { data, loading, error } = useCloudData<MatchGroup[]>(fetchMatchStats);
@@ -18,8 +31,8 @@ export function MatchStats() {
         {error && <div className="text-red-500">数据加载失败</div>}
 
         <div className="space-y-12">
-          {groups.map((g) => (
-            <SeasonBlock key={g.year} group={g} />
+          {groups.map((g, gi) => (
+            <SeasonBlock key={g.year} group={g} groupIdx={gi} />
           ))}
         </div>
       </section>
@@ -27,7 +40,7 @@ export function MatchStats() {
   );
 }
 
-function SeasonBlock({ group }: { group: MatchGroup }) {
+function SeasonBlock({ group, groupIdx }: { group: MatchGroup; groupIdx: number }) {
   return (
     <div>
       <div className="flex items-baseline gap-4 mb-6 border-b border-black/10 pb-3">
@@ -53,7 +66,7 @@ function SeasonBlock({ group }: { group: MatchGroup }) {
 
       <div className="grid grid-cols-1 gap-3">
         {group.events.map((event, idx) => (
-          <MatchRow key={event.round + idx} event={event} />
+          <MatchRow key={event.round + idx} event={event} groupIdx={groupIdx} eventIdx={idx} />
         ))}
       </div>
     </div>
@@ -74,18 +87,43 @@ function parseScore(score: string) {
   return { left: parts[0] ?? "0", right: parts[1] ?? "0" };
 }
 
-function MatchRow({ event }: { event: MatchEvent }) {
+function TeamName({ name }: { name: string }) {
+  const base = getBaseUrl();
+  const logo = TEAM_LOGO[name];
+  const isOurs = name === OUR_TEAM;
+
+  return (
+    <span className="inline-flex items-center gap-2">
+      {logo && (
+        <img
+          src={`${base}${logo}`}
+          alt=""
+          className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0"
+        />
+      )}
+      <span className={isOurs ? "text-brand-500 font-bold" : ""}>{name}</span>
+    </span>
+  );
+}
+
+function MatchRow({ event, groupIdx, eventIdx }: { event: MatchEvent; groupIdx: number; eventIdx: number }) {
+  const navigate = useNavigate();
   const score = parseScore(event.score);
 
   return (
-    <div className="bg-white border border-black/5 hover:shadow-md transition-shadow">
+    <div
+      className="bg-white border border-black/5 hover:shadow-md transition-shadow cursor-pointer"
+      onClick={() => navigate(`/match/${groupIdx}/${eventIdx}`)}
+    >
       <div className="p-4 grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-6">
         <span className="text-[10px] font-bold uppercase tracking-widest text-brand-700 bg-brand-50 px-2 py-1 min-w-[88px] text-center">
           {event.round}
         </span>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-          <div className="text-right font-semibold text-ink truncate">{event.left}</div>
+          <div className="flex justify-end font-semibold text-ink truncate">
+            <TeamName name={event.left} />
+          </div>
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center gap-2 font-display text-2xl sm:text-3xl">
               <span>{score.left}</span>
@@ -98,7 +136,9 @@ function MatchRow({ event }: { event: MatchEvent }) {
               </div>
             )}
           </div>
-          <div className="text-left font-semibold text-ink truncate">{event.right}</div>
+          <div className="flex justify-start font-semibold text-ink truncate">
+            <TeamName name={event.right} />
+          </div>
         </div>
 
         <div className="w-[100px] text-right">
@@ -107,6 +147,7 @@ function MatchRow({ event }: { event: MatchEvent }) {
               href={event.video.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="text-xs font-bold uppercase tracking-wider text-brand-700 hover:text-brand-500 transition-colors"
             >
               ▶ {event.video.label}

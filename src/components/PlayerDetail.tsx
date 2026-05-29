@@ -88,18 +88,18 @@ export function PlayerDetail() {
             Player Info
           </h2>
 
-          <dl className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-black/10 border border-black/10">
-            <Field label="俱乐部"   value={player.club} />
-            <Field label="位置"     value={player.position} />
-            <Field label="号码"     value={player.number ? `#${player.number}` : null} />
-            <Field label="省份"     value={player.province} />
-            <Field label="年龄"     value={player.age != null ? `${player.age} 岁` : null} />
-            <Field label="生日"     value={player.birthday} />
-            <Field label="身高"     value={player.height != null ? `${player.height} cm` : null} />
-            <Field label="体重"     value={player.weight != null ? `${player.weight} kg` : null} />
-            <Field label="惯用脚"   value={player.foot} />
-            <Field label="替补出场" value={player.subs ?? 0} />
-          </dl>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <InfoCard label="俱乐部" value={player.club} />
+            <InfoCard label="位置" value={player.position} />
+            <InfoCard label="号码" value={player.number ? `#${player.number}` : null} />
+            <InfoCard label="省份" value={player.province} />
+            <InfoCard label="惯用脚" value={player.foot} />
+            <InfoCard label="年龄" value={player.age != null ? `${player.age} 岁` : null} />
+            <InfoCard label="生日" value={player.birthday} />
+            <InfoCard label="身高" value={player.height != null ? `${player.height} cm` : null} />
+            <InfoCard label="体重" value={player.weight != null ? `${player.weight} kg` : null} />
+            <InfoCard label="替补出场" value={player.subs ?? 0} />
+          </div>
         </div>
       </section>
     </div>
@@ -117,13 +117,15 @@ function Headline({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Field({ label, value }: { label: string; value: React.ReactNode }) {
+function InfoCard({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="bg-white p-4">
-      <dt className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+    <div className="bg-paper-2 rounded-lg p-5 hover:shadow-md transition-shadow">
+      <dt className="text-[10px] text-gray-400 uppercase tracking-widest mb-2">
         {label}
       </dt>
-      <dd className="text-ink font-semibold">{value ?? "--"}</dd>
+      <dd className="text-ink font-display text-xl lg:text-2xl">
+        {value ?? "--"}
+      </dd>
     </div>
   );
 }

@@ -22,6 +22,7 @@
   /* 字体族 */
   --font-display: "Anton", "Bebas Neue", "Helvetica Neue", "Arial Narrow",
                   "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-display-alt: "Teko", "Bebas Neue", sans-serif;
   --font-sans:    "Inter", "Helvetica Neue", "Arial", "PingFang SC",
                   "Noto Sans SC", "Microsoft YaHei", sans-serif;
 }
@@ -50,6 +51,11 @@ body {
 .font-display {
   font-family: var(--font-display);
   letter-spacing: 0.01em;
+}
+
+.font-display-alt {
+  font-family: var(--font-display-alt);
+  letter-spacing: 0.03em;
 }
 
 /* 隐形 scrollbar (保留) */
