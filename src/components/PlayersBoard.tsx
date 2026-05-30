@@ -72,27 +72,6 @@ export function PlayersBoard() {
         {loading && <div className="text-gray-500 py-12">加载中...</div>}
         {error && <div className="text-red-500 py-12">数据加载失败</div>}
 
-        {POSITION_GROUPS.filter((g) => filter === "all" || filter === g.group).map(
-          ({ label, en, group }) => {
-            const players = allPlayers.filter((p) => p.positionGroup === group);
-            if (players.length === 0) return null;
-            return (
-              <div key={group} className="mb-14 last:mb-0">
-                <div className="flex items-baseline gap-4 mb-6">
-                  <h2 className="font-display text-2xl sm:text-3xl uppercase">{en}</h2>
-                  <span className="text-sm text-gray-500">{label}</span>
-                  <span className="text-xs text-gray-400 ml-auto">{players.length} players</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-9">
-                  {players.map((p) => (
-                    <PlayerTile key={p.filename} player={p} />
-                  ))}
-                </div>
-              </div>
-            );
-          }
-        )}
-
         {/* Manager */}
         {filter === "all" && (
           <div className="mb-14 last:mb-0">
@@ -119,6 +98,27 @@ export function PlayersBoard() {
               </div>
             </div>
           </div>
+        )}
+
+        {POSITION_GROUPS.filter((g) => filter === "all" || filter === g.group).map(
+          ({ label, en, group }) => {
+            const players = allPlayers.filter((p) => p.positionGroup === group);
+            if (players.length === 0) return null;
+            return (
+              <div key={group} className="mb-14 last:mb-0">
+                <div className="flex items-baseline gap-4 mb-6">
+                  <h2 className="font-display text-2xl sm:text-3xl uppercase">{en}</h2>
+                  <span className="text-sm text-gray-500">{label}</span>
+                  <span className="text-xs text-gray-400 ml-auto">{players.length} players</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-9">
+                  {players.map((p) => (
+                    <PlayerTile key={p.filename} player={p} />
+                  ))}
+                </div>
+              </div>
+            );
+          }
         )}
       </section>
     </div>
