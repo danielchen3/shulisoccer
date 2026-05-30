@@ -43,6 +43,20 @@ export interface MatchGoal {
   type: "goal" | "penalty";
 }
 
+export interface MatchTimelineEvent {
+  type: "goal" | "substitution" | "yellow_card" | "red_card" | "half_time";
+  minute?: number;
+  side?: "left" | "right";
+  team?: string;
+  player?: string;
+  playerIn?: string;
+  playerOut?: string;
+  playersIn?: string[];
+  playersOut?: string[];
+  score?: string;
+  detail?: string;
+}
+
 export interface MatchEvent {
   round: string;
   left: string;
@@ -50,6 +64,8 @@ export interface MatchEvent {
   right: string;
   video?: { label: string; url: string };
   goals?: MatchGoal[];
+  starters?: string[];
+  timeline?: MatchTimelineEvent[];
 }
 
 export interface MatchGroup {

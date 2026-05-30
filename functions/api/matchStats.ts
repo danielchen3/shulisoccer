@@ -23,6 +23,20 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
       round: string; left: string; score: string; right: string;
       videoLabel?: string; videoUrl?: string;
       goals?: Array<{ minute: number; player: string; type: string }>;
+      starters?: string[];
+      timeline?: Array<{
+        type: "goal" | "substitution" | "yellow_card" | "red_card" | "half_time";
+        minute?: number;
+        side?: "left" | "right";
+        team?: string;
+        player?: string;
+        playerIn?: string;
+        playerOut?: string;
+        playersIn?: string[];
+        playersOut?: string[];
+        score?: string;
+        detail?: string;
+      }>;
     }>).map((e) => ({
       round: e.round,
       left: e.left,
@@ -30,6 +44,8 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
       right: e.right,
       video: e.videoUrl ? { label: e.videoLabel!, url: e.videoUrl } : undefined,
       goals: e.goals,
+      starters: e.starters,
+      timeline: e.timeline,
     })),
   }));
 

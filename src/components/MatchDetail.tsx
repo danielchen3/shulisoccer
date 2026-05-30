@@ -1,6 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useCloudData } from "../hooks/useCloudData";
-import { fetchMatchStats, type MatchGroup, type MatchGoal } from "../api";
+import {
+  fetchMatchStats,
+  type MatchGroup,
+  type MatchGoal,
+  type MatchTimelineEvent,
+} from "../api";
 import { getBaseUrl } from "../utils/baseUrl";
 
 const TEAM_LOGO: Record<string, string> = {
@@ -43,9 +48,9 @@ export function MatchDetail() {
 
   const score = parseScore(event.score);
   const hasGoals = event.goals && event.goals.length > 0;
-
-  const regularGoals = event.goals?.filter((g) => g.type === "goal") ?? [];
-  const penaltyGoals = event.goals?.filter((g) => g.type === "penalty") ?? [];
+  const starters = event.starters ?? [];
+  const timeline = event.timeline ?? [];
+  const hasTimeline = timeline.length > 0 || hasGoals;
 
   return (
     <div>
@@ -102,50 +107,59 @@ export function MatchDetail() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="max-w-[700px] mx-auto px-4 sm:px-6 lg:px-10 py-10 lg:py-14">
-        <span className="block text-brand-600 text-xs font-bold uppercase tracking-[0.3em] mb-2">
-          ▍ Timeline
-        </span>
-        <h2 className="font-display text-2xl sm:text-3xl uppercase mb-8">
-          Match Events
-        </h2>
+      <section className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-10 py-10 lg:py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 lg:gap-10 items-start">
+          <div className="bg-white border border-black/5 rounded-2xl p-6">
+            <span className="block text-brand-600 text-xs font-bold uppercase tracking-[0.3em] mb-2">
+              ▍ Lineup
+            </span>
+            <h2 className="font-display text-xl sm:text-2xl uppercase mb-5">
+              首发阵容
+            </h2>
 
-        {!hasGoals ? (
-          <div className="text-gray-400 text-sm py-8 text-center border border-dashed border-gray-200 rounded-lg">
-            暂无数据
-          </div>
-        ) : (
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-[23px] top-2 bottom-2 w-px bg-black/10" />
-
-            <div className="space-y-0">
-              {regularGoals.map((goal, idx) => (
-                <GoalEvent key={`g-${idx}`} goal={goal} />
-              ))}
-
-              {penaltyGoals.length > 0 && (
-                <>
-                  <div className="relative flex items-center gap-4 py-4 pl-[48px]">
-                    <div className="absolute left-[17px] w-[13px] h-[13px] rounded-full bg-brand-500 border-2 border-white ring-1 ring-brand-500" />
-                    <span className="font-display text-sm uppercase tracking-wider text-brand-600">
-                      Penalty Shootout
+            {starters.length === 0 ? (
+              <EmptyState text="阵容待补充" />
+            ) : (
+              <div className="grid grid-cols-1 gap-2.5">
+                {starters.map((player, idx) => (
+                  <div
+                    key={`${player}-${idx}`}
+                    className="flex items-center gap-3 rounded-xl bg-paper-2 px-3.5 py-2.5"
+                  >
+                    <span className="font-display text-brand-500 text-base w-5 shrink-0">
+                      {idx + 1}
                     </span>
-                    {score.penaltyLeft && (
-                      <span className="text-xs text-gray-400">
-                        ({score.penaltyLeft} : {score.penaltyRight})
-                      </span>
-                    )}
+                    <span className="font-semibold text-sm text-ink">{player}</span>
                   </div>
-                  {penaltyGoals.map((goal, idx) => (
-                    <GoalEvent key={`p-${idx}`} goal={goal} isPenalty />
-                  ))}
-                </>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          <div className="bg-white border border-black/5 rounded-2xl p-6">
+            <span className="block text-brand-600 text-xs font-bold uppercase tracking-[0.3em] mb-2">
+              ▍ Timeline
+            </span>
+            <h2 className="font-display text-xl sm:text-2xl uppercase mb-8">
+              Match Events
+            </h2>
+
+            {!hasTimeline ? (
+              <EmptyState text="比赛时间线待补充" />
+            ) : (
+              <div className="relative">
+                <div className="absolute left-1/2 -translate-x-1/2 top-2 bottom-2 w-px bg-emerald-500/70" />
+
+                <div className="space-y-0">
+                  {timeline.map((item, idx) => (
+                    <TimelineEvent key={`t-${idx}`} item={item} />
+                  ))}
+                  {renderLegacyGoalEvents(event.goals)}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </section>
     </div>
   );
@@ -177,26 +191,232 @@ function TeamBadge({ name, base, side }: { name: string; base: string; side: "le
 
 function GoalEvent({ goal, isPenalty }: { goal: MatchGoal; isPenalty?: boolean }) {
   return (
-    <div className="relative flex items-center gap-4 py-3 pl-[48px] group">
-      {/* Dot on the timeline */}
-      <div className="absolute left-[19px] w-[9px] h-[9px] rounded-full bg-white border-2 border-gray-300 group-hover:border-brand-500 transition-colors" />
+    <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3">
+      <div />
+      <div className="relative z-10 w-[52px] h-[52px] rounded-full bg-emerald-500 text-white border-4 border-white shadow-[0_8px_22px_rgba(16,185,129,0.25)] flex items-center justify-center font-display text-base">
+        {!isPenalty ? `${goal.minute}'` : "PEN"}
+      </div>
+      <div className="rounded-2xl border border-brand-100 bg-white px-4 py-3 shadow-sm">
+        <div className="text-xs font-bold text-ink">⚽ 进球</div>
+        <div className="mt-1 text-base font-semibold text-ink">{goal.player}</div>
+      </div>
+    </div>
+  );
+}
 
-      {/* Minute */}
-      {!isPenalty ? (
-        <span className="font-display text-lg text-brand-500 w-[40px] shrink-0">
-          {goal.minute}'
-        </span>
-      ) : (
-        <span className="w-[40px] shrink-0 text-center text-xs text-gray-300">
-          PEN
-        </span>
+function TimelineEvent({ item }: { item: MatchTimelineEvent }) {
+  if (item.type === "half_time") {
+    return <TimelineMarker item={item} />;
+  }
+
+  const config = getTimelineEventConfig(item.type);
+  const primaryText = getTimelinePrimaryText(item);
+  const secondaryLines = getTimelineSecondaryLines(item);
+  const isLeft = item.side !== "right";
+
+  return (
+    <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3">
+      <div className={isLeft ? "flex justify-end" : ""}>
+        {isLeft && (
+          <TimelineCard
+            align="left"
+            config={config}
+            primaryText={primaryText}
+            secondaryLines={secondaryLines}
+          />
+        )}
+      </div>
+
+      <div className="relative z-10 w-[52px] h-[52px] rounded-full bg-emerald-500 text-white border-4 border-white shadow-[0_8px_22px_rgba(16,185,129,0.25)] flex items-center justify-center font-display text-base">
+        {item.minute != null ? `${item.minute}'` : "--"}
+      </div>
+
+      <div className={!isLeft ? "flex justify-start" : ""}>
+        {!isLeft && (
+          <TimelineCard
+            align="right"
+            config={config}
+            primaryText={primaryText}
+            secondaryLines={secondaryLines}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function getTimelineEventConfig(type: MatchTimelineEvent["type"]) {
+  switch (type) {
+    case "goal":
+      return {
+        kind: "default" as const,
+        icon: "⚽",
+        iconClass: "text-ink",
+        labelClass: "text-ink",
+        dotClass: "border-emerald-500 group-hover:border-emerald-600",
+      };
+    case "substitution":
+      return {
+        kind: "default" as const,
+        icon: "⇄",
+        iconClass: "text-emerald-600",
+        labelClass: "text-ink",
+        dotClass: "border-emerald-500 group-hover:border-emerald-600",
+      };
+    case "yellow_card":
+      return {
+        kind: "card" as const,
+        icon: "🟨",
+        iconClass: "",
+        labelClass: "text-amber-700",
+        dotClass: "border-amber-400 group-hover:border-amber-500",
+      };
+    case "red_card":
+      return {
+        kind: "card" as const,
+        icon: "🟥",
+        iconClass: "",
+        labelClass: "text-red-700",
+        dotClass: "border-red-500 group-hover:border-red-600",
+      };
+    case "half_time":
+      return {
+        kind: "default" as const,
+        icon: "",
+        iconClass: "",
+        labelClass: "text-ink",
+        dotClass: "",
+      };
+  }
+}
+
+function getTimelinePrimaryText(item: MatchTimelineEvent) {
+  switch (item.type) {
+    case "goal":
+      return "进球";
+    case "substitution":
+      return "换人";
+    case "yellow_card":
+      return item.player ? `${item.player} · 黄牌` : "黄牌";
+    case "red_card":
+      return item.player ? `${item.player} · 红牌` : "红牌";
+    case "half_time":
+      return item.score ? `半场 ${item.score}` : "半场";
+  }
+}
+
+function getTimelineSecondaryLines(item: MatchTimelineEvent) {
+  switch (item.type) {
+    case "goal":
+      return [item.player, item.detail].filter(Boolean) as string[];
+    case "substitution": {
+      const lines: string[] = [];
+      const ins = item.playersIn ?? (item.playerIn ? [item.playerIn] : []);
+      const outs = item.playersOut ?? (item.playerOut ? [item.playerOut] : []);
+      lines.push(...ins.map((player) => `↑ ${player}`));
+      lines.push(...outs.map((player) => `↓ ${player}`));
+      if (item.detail) lines.push(item.detail);
+      return lines;
+    }
+    case "yellow_card":
+    case "red_card":
+      return [item.detail].filter(Boolean) as string[];
+    case "half_time":
+      return [];
+  }
+}
+
+function TimelineCard({
+  align,
+  config,
+  primaryText,
+  secondaryLines,
+}: {
+  align: "left" | "right";
+  config: ReturnType<typeof getTimelineEventConfig>;
+  primaryText: string;
+  secondaryLines: string[];
+}) {
+  return (
+    <div className="w-full max-w-[270px] rounded-2xl border border-brand-100 bg-white px-4 py-3 shadow-sm">
+      <div className={`${getTimelinePrimaryClass(config.kind)} ${config.labelClass}`}>
+        <span className={config.iconClass}>{config.icon}</span>
+        {config.icon ? " " : ""}
+        {primaryText}
+      </div>
+      {secondaryLines.length > 0 && (
+        <div className="mt-1 space-y-1">
+          {secondaryLines.map((line, idx) => (
+            <div
+              key={`${align}-${idx}-${line}`}
+              className={getTimelineLineClass(line)}
+            >
+              {line}
+            </div>
+          ))}
+        </div>
       )}
+    </div>
+  );
+}
 
-      {/* Icon */}
-      <span className="text-lg shrink-0">⚽</span>
+function getTimelineLineClass(line: string) {
+  if (line.startsWith("↑")) return "text-base font-semibold text-emerald-600";
+  if (line.startsWith("↓")) return "text-base font-semibold text-red-500";
+  return "text-base font-semibold text-ink";
+}
 
-      {/* Player name */}
-      <span className="font-semibold text-ink">{goal.player}</span>
+function getTimelinePrimaryClass(kind: ReturnType<typeof getTimelineEventConfig>["kind"]) {
+  if (kind === "card") return "text-base font-semibold";
+  return "text-xs font-bold";
+}
+
+function TimelineMarker({ item }: { item: MatchTimelineEvent }) {
+  return (
+    <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-5">
+      <div />
+      <div className="relative z-10 rounded-full border-2 border-emerald-300 bg-emerald-50 px-5 py-2 text-emerald-700 font-display text-xl">
+        {item.score ? `半场 ${item.score}` : "半场"}
+      </div>
+      <div />
+    </div>
+  );
+}
+
+function renderLegacyGoalEvents(goals?: MatchGoal[]) {
+  if (!goals || goals.length === 0) return null;
+
+  const regularGoals = goals.filter((g) => g.type === "goal");
+  const penaltyGoals = goals.filter((g) => g.type === "penalty");
+
+  return (
+    <>
+      {regularGoals.map((goal, idx) => (
+        <GoalEvent key={`g-${idx}`} goal={goal} />
+      ))}
+
+      {penaltyGoals.length > 0 && (
+        <>
+          <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4">
+            <div />
+            <div className="relative z-10 rounded-full border-2 border-brand-200 bg-white px-5 py-2 text-brand-700 font-display text-sm uppercase tracking-wider">
+              Penalty Shootout
+            </div>
+            <div />
+          </div>
+          {penaltyGoals.map((goal, idx) => (
+            <GoalEvent key={`p-${idx}`} goal={goal} isPenalty />
+          ))}
+        </>
+      )}
+    </>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="text-gray-400 text-sm py-8 text-center border border-dashed border-gray-200 rounded-lg">
+      {text}
     </div>
   );
 }
