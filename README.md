@@ -18,8 +18,6 @@ http://127.0.0.1:8788/
 
 Use `8788` for local development. Port `5173` is only the Vite frontend server.
 
-## Default Login
-
 ## Checks
 
 ```bash

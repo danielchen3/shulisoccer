@@ -72,7 +72,6 @@ export function LoginPage() {
               onChange={(event) => setUsername(event.target.value)}
               autoComplete="username"
               className="w-full border border-black/20 px-4 py-3 outline-none focus:border-brand-600"
-              placeholder="ccx"
             />
           </div>
 
@@ -87,7 +86,6 @@ export function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               autoComplete="current-password"
               className="w-full border border-black/20 px-4 py-3 outline-none focus:border-brand-600"
-              placeholder="ccx_123"
             />
           </div>
 

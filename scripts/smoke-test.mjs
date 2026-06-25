@@ -2,6 +2,8 @@ import { spawn, spawnSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 
 const baseUrl = process.env.SMOKE_BASE_URL ?? "http://127.0.0.1:8788";
+const adminUsername = process.env.SMOKE_ADMIN_USERNAME ?? "ccx";
+const adminPassword = process.env.SMOKE_ADMIN_PASSWORD ?? `${adminUsername}_123`;
 const serverCommand = process.platform === "win32" ? "cmd.exe" : "npm";
 const serverArgs = process.platform === "win32"
   ? ["/d", "/s", "/c", "npm.cmd run dev"]
@@ -36,7 +38,7 @@ try {
   const admin = createClient();
   const login = await admin.fetch("/api/auth/login", {
     method: "POST",
-    body: { username: "ccx", password: "ccx_123" },
+    body: { username: adminUsername, password: adminPassword },
   });
   assert(login.status === 200, `expected login 200, got ${login.status}`);
 
