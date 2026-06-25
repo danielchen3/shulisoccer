@@ -150,12 +150,13 @@ export async function createSession(
   const ipAddress = request.headers.get("cf-connecting-ip");
   const userAgent = request.headers.get("user-agent");
 
-  await env.DB.prepare(
-    `
-      INSERT INTO sessions (playerId, tokenHash, expiresAt, userAgent, ipAddress)
-      VALUES (?, ?, ?, ?, ?)
-    `
-  ).bind(playerId, tokenHash, expiresAt, userAgent, ipAddress).run();
+  try {
+    await insertSession(env, playerId, tokenHash, expiresAt, userAgent, ipAddress);
+  } catch (error) {
+    console.error("failed to insert session; ensuring sessions table", error);
+    await ensureSessionsTable(env);
+    await insertSession(env, playerId, tokenHash, expiresAt, userAgent, ipAddress);
+  }
 
   try {
     await env.DB.prepare(
@@ -166,6 +167,44 @@ export async function createSession(
   }
 
   return { token, expiresAt };
+}
+
+async function insertSession(
+  env: AuthEnv,
+  playerId: number,
+  tokenHash: string,
+  expiresAt: string,
+  userAgent: string | null,
+  ipAddress: string | null
+): Promise<void> {
+  await env.DB.prepare(
+    `
+      INSERT INTO sessions (playerId, tokenHash, expiresAt, userAgent, ipAddress)
+      VALUES (?, ?, ?, ?, ?)
+    `
+  ).bind(playerId, tokenHash, expiresAt, userAgent, ipAddress).run();
+}
+
+async function ensureSessionsTable(env: AuthEnv): Promise<void> {
+  await env.DB.batch([
+    env.DB.prepare(
+      `
+        CREATE TABLE IF NOT EXISTS sessions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          playerId INTEGER NOT NULL,
+          tokenHash TEXT NOT NULL UNIQUE,
+          createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          expiresAt TEXT NOT NULL,
+          lastSeenAt TEXT,
+          userAgent TEXT,
+          ipAddress TEXT,
+          FOREIGN KEY (playerId) REFERENCES players(id) ON DELETE CASCADE
+        )
+      `
+    ),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_sessions_player_id ON sessions(playerId)"),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expiresAt)"),
+  ]);
 }
 
 export async function deleteCurrentSession(env: AuthEnv, request: Request): Promise<void> {
