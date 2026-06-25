@@ -9,11 +9,4 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: '/',
-  server: {
-    proxy: {
-      // 开发时将 /api/* 转发到 wrangler pages dev (端口 8788)
-      // 需要同时运行 npm run dev 和 npm run dev:full
-      '/api': 'http://localhost:8788',
-    },
-  },
 })

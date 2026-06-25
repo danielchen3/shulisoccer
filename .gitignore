@@ -11,7 +11,6 @@ dist-ssr
 # Cloudflare wrangler 本地运行时状态（D1 SQLite、miniflare 缓存等）
 .wrangler/
 .claude/
-.github/
 
 main.png
 players.png
@@ -27,7 +26,6 @@ ARCHITECTURE.md
 球员信息统计.xlsx
 
 # 一次性数据导入脚本（依赖 .xlsx 原文件，仓库里只保留 migrations 结果）
-scripts/
 
 # Logs
 logs

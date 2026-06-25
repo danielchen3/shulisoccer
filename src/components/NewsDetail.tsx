@@ -2,22 +2,23 @@ import { Link, useParams } from "react-router-dom";
 import { useCloudData } from "../hooks/useCloudData";
 import { fetchNews, type NewsItem } from "../api";
 import { getBaseUrl } from "../utils/baseUrl";
+import { ContentComments } from "./comments/ContentComments";
 
 export function NewsDetail() {
   const { id } = useParams();
   const base = getBaseUrl();
   const { data, loading, error } = useCloudData<NewsItem[]>(fetchNews);
 
-  if (loading) return <PageMsg>加载中...</PageMsg>;
-  if (error) return <PageMsg className="text-red-400">数据加载失败</PageMsg>;
+  if (loading) return <PageMsg>Loading...</PageMsg>;
+  if (error) return <PageMsg className="text-red-400">Failed to load news.</PageMsg>;
 
-  const item = (data ?? []).find((n) => String(n.id) === id);
-  if (!item) return <PageMsg>未找到该新闻</PageMsg>;
+  const item = (data ?? []).find((news) => String(news.id) === id);
+  if (!item) return <PageMsg>News item not found.</PageMsg>;
 
   const images = item.image
-    ? item.image.split(",").map((s) => {
-        const p = s.trim();
-        return p.startsWith("http") || p.startsWith("/") ? p : `${base}${p}`;
+    ? item.image.split(",").map((value) => {
+        const path = value.trim();
+        return path.startsWith("http") || path.startsWith("/") ? path : `${base}${path}`;
       })
     : [];
 
@@ -29,10 +30,10 @@ export function NewsDetail() {
             to="/"
             className="text-xs text-white/60 hover:text-white uppercase tracking-widest inline-flex items-center gap-2 mb-6"
           >
-            ← Back to News
+            Back to News
           </Link>
           <span className="block text-brand-400 text-xs font-bold uppercase tracking-[0.3em] mb-3">
-            ▍ News
+            News
           </span>
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl uppercase leading-[1.1] mb-4">
             {item.content}
@@ -60,8 +61,14 @@ export function NewsDetail() {
             {item.body}
           </div>
         ) : (
-          <p className="text-gray-400 text-sm">暂无详细内容。</p>
+          <p className="text-gray-400 text-sm">No detailed content yet.</p>
         )}
+
+        <ContentComments
+          targetType="news"
+          targetId={String(item.id)}
+          title="News Comments"
+        />
       </section>
     </div>
   );

@@ -7,6 +7,7 @@ import {
   type MatchTimelineEvent,
 } from "../api";
 import { getBaseUrl } from "../utils/baseUrl";
+import { ContentComments } from "./comments/ContentComments";
 
 const TEAM_LOGO: Record<string, string> = {
   "树礼书院": "assets/logo.png",
@@ -51,6 +52,7 @@ export function MatchDetail() {
   const starters = event.starters ?? [];
   const timeline = event.timeline ?? [];
   const hasTimeline = timeline.length > 0 || hasGoals;
+  const commentTargetId = getMatchCommentTargetId(group, event);
 
   return (
     <div>
@@ -160,12 +162,28 @@ export function MatchDetail() {
             )}
           </div>
         </div>
+
+        <ContentComments
+          targetType="match"
+          targetId={commentTargetId}
+          title="Match Comments"
+        />
       </section>
     </div>
   );
 }
 
-function TeamBadge({ name, base, side }: { name: string; base: string; side: "left" | "right" }) {
+function getMatchCommentTargetId(group: MatchGroup, event: MatchGroup["events"][number]) {
+  return [
+    group.year,
+    event.round,
+    event.left,
+    event.score,
+    event.right,
+  ].join("|");
+}
+
+function TeamBadge({ name, base }: { name: string; base: string; side: "left" | "right" }) {
   const logo = TEAM_LOGO[name];
   const isOurs = name === OUR_TEAM;
 

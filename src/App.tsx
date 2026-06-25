@@ -10,9 +10,18 @@ import { Jersey } from "./components/Jersey";
 import { TeamMoments } from "./components/TeamMoments";
 import { NewsDetail } from "./components/NewsDetail";
 import { MatchDetail } from "./components/MatchDetail";
+import { LoginPage } from "./components/LoginPage";
+import { AuthProvider } from "./auth/AuthContext";
+import { AdminHome } from "./components/admin/AdminHome";
+import { AdminNewsPage } from "./components/admin/AdminNewsPage";
+import { AdminPlayersPage } from "./components/admin/AdminPlayersPage";
+import { AdminAuditPage } from "./components/admin/AdminAuditPage";
+import { DiscussionBoard } from "./components/discussion/DiscussionBoard";
+import { DiscussionDetail } from "./components/discussion/DiscussionDetail";
 
 export default function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className="min-h-screen w-full bg-paper-2 text-ink flex flex-col">
         <NavBar />
@@ -28,6 +37,13 @@ export default function App() {
             <Route path="/match/:groupIdx/:eventIdx" element={<MatchDetail />} />
             <Route path="/jersey" element={<Jersey />} />
             <Route path="/moments" element={<TeamMoments />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/discussion" element={<DiscussionBoard />} />
+            <Route path="/discussion/:id" element={<DiscussionDetail />} />
+            <Route path="/admin" element={<AdminHome />} />
+            <Route path="/admin/news" element={<AdminNewsPage />} />
+            <Route path="/admin/players" element={<AdminPlayersPage />} />
+            <Route path="/admin/audit" element={<AdminAuditPage />} />
           </Routes>
         </main>
         <footer className="bg-ink text-white/60 py-8 mt-16">
@@ -47,5 +63,6 @@ export default function App() {
         </footer>
       </div>
     </Router>
+    </AuthProvider>
   );
 }

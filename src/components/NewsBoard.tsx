@@ -11,18 +11,20 @@ export function NewsBoard() {
   const base = getBaseUrl();
   const { data, loading, error } = useCloudData<NewsItem[]>(fetchNews);
   const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const total = HERO_IMAGES.length;
 
   const resetTimer = useCallback(() => {
-    clearInterval(timerRef.current);
+    if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setCurrent((i) => (i + 1) % total), AUTO_INTERVAL);
   }, [total]);
 
   useEffect(() => {
     resetTimer();
-    return () => clearInterval(timerRef.current);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [resetTimer]);
 
   const go = (dir: -1 | 1) => {
@@ -32,8 +34,6 @@ export function NewsBoard() {
 
   const newsList = data ?? [];
   const featured = newsList[0];
-  const rest = newsList.slice(1);
-
   return (
     <div>
       {/* ----- HERO ----- */}

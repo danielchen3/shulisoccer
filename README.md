@@ -1,15 +1,56 @@
-# 树礼书院足球队官网
+# Shuli Soccer
 
-React + Cloudflare Pages + D1
+React + TypeScript + Cloudflare Pages Functions + D1.
 
-## 本地开发
+## Setup
 
 ```bash
 npm install
-npm run db:migrate:local   # 首次需要：初始化本地数据库（只建表，数据需自行 INSERT）
-npm run dev                # 启动前端 + 后端，访问 http://localhost:5173
+npm run db:migrate:local
+npm run dev
 ```
 
-## 部署
+Open:
 
-推到 GitHub `main` 分支，Cloudflare Pages 自动构建发布。
+```text
+http://127.0.0.1:8788/
+```
+
+Use `8788` for local development. Port `5173` is only the Vite frontend server.
+
+## Default Login
+
+## Checks
+
+```bash
+npm run check
+npm run test:smoke
+```
+
+## Database
+
+Local D1:
+
+```bash
+npm run db:migrate:local
+```
+
+Remote Cloudflare D1:
+
+```bash
+npm run db:migrate:remote
+```
+
+Run the remote migration before deploying new database changes.
+
+## Deploy
+
+```bash
+npm run check
+npm run db:migrate:remote
+git push
+```
+
+Cloudflare Pages build output is `dist`.
+
+More project notes: [docs/features.md](docs/features.md).
