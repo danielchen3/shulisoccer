@@ -157,9 +157,13 @@ export async function createSession(
     `
   ).bind(playerId, tokenHash, expiresAt, userAgent, ipAddress).run();
 
-  await env.DB.prepare(
-    "UPDATE players SET lastLoginAt = CURRENT_TIMESTAMP WHERE id = ?"
-  ).bind(playerId).run();
+  try {
+    await env.DB.prepare(
+      "UPDATE players SET lastLoginAt = CURRENT_TIMESTAMP WHERE id = ?"
+    ).bind(playerId).run();
+  } catch (error) {
+    console.error("failed to update lastLoginAt", error);
+  }
 
   return { token, expiresAt };
 }
@@ -252,32 +256,36 @@ export async function recordAuditLog(
   actor: AuthPlayer,
   input: AuditLogInput
 ): Promise<void> {
-  await env.DB.prepare(
-    `
-      INSERT INTO audit_logs (
-        actorPlayerId,
-        actorName,
-        actorRole,
-        action,
-        resourceType,
-        resourceId,
-        details,
-        ipAddress,
-        userAgent
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `
-  ).bind(
-    actor.id,
-    actor.name,
-    actor.role,
-    input.action,
-    input.resourceType,
-    input.resourceId == null ? null : String(input.resourceId),
-    input.details === undefined ? null : JSON.stringify(input.details),
-    request.headers.get("cf-connecting-ip"),
-    request.headers.get("user-agent")
-  ).run();
+  try {
+    await env.DB.prepare(
+      `
+        INSERT INTO audit_logs (
+          actorPlayerId,
+          actorName,
+          actorRole,
+          action,
+          resourceType,
+          resourceId,
+          details,
+          ipAddress,
+          userAgent
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `
+    ).bind(
+      actor.id,
+      actor.name,
+      actor.role,
+      input.action,
+      input.resourceType,
+      input.resourceId == null ? null : String(input.resourceId),
+      input.details === undefined ? null : JSON.stringify(input.details),
+      request.headers.get("cf-connecting-ip"),
+      request.headers.get("user-agent")
+    ).run();
+  } catch (error) {
+    console.error("failed to record audit log", error);
+  }
 }
 
 async function pbkdf2(

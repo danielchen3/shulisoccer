@@ -12,6 +12,7 @@ interface CcxRow {
 }
 
 const REQUIRED_TABLES = ["players", "sessions", "audit_logs"] as const;
+const PLAYER_AUTH_COLUMNS = ["username", "passwordHash", "role", "loginEnabled", "lastLoginAt"] as const;
 
 export const onRequestGet: PagesFunction<AuthEnv> = async ({ env }) => {
   try {
@@ -25,6 +26,9 @@ export const onRequestGet: PagesFunction<AuthEnv> = async ({ env }) => {
     ).all<TableRow>();
 
     const tables = new Set(tableRows.map((row) => row.name));
+    const { results: playerColumns } = await env.DB.prepare("PRAGMA table_info(players)")
+      .all<{ name: string }>();
+    const playerColumnSet = new Set(playerColumns.map((column) => column.name));
     const ccx = await env.DB.prepare(
       `
         SELECT
@@ -40,10 +44,14 @@ export const onRequestGet: PagesFunction<AuthEnv> = async ({ env }) => {
 
     return jsonResponse({
       ok: REQUIRED_TABLES.every((table) => tables.has(table)) &&
+        PLAYER_AUTH_COLUMNS.every((column) => playerColumnSet.has(column)) &&
         ccx?.role === "admin" &&
         ccx?.loginEnabled === 1 &&
         ccx?.hasPasswordHash === 1,
       tables: Object.fromEntries(REQUIRED_TABLES.map((table) => [table, tables.has(table)])),
+      playerColumns: Object.fromEntries(
+        PLAYER_AUTH_COLUMNS.map((column) => [column, playerColumnSet.has(column)])
+      ),
       ccx: ccx
         ? {
             username: ccx.username,
