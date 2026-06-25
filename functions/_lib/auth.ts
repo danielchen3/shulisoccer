@@ -31,7 +31,7 @@ interface PlayerAuthRow extends AuthPlayer {
 
 const SESSION_COOKIE = "shuli_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
-const PASSWORD_ITERATIONS = 120_000;
+const PASSWORD_ITERATIONS = 100_000;
 
 export function jsonResponse(body: unknown, init?: ResponseInit): Response {
   return Response.json(body, {
