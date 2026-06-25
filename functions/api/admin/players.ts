@@ -8,6 +8,10 @@ import {
   type AuthPlayer,
   type PlayerRole,
 } from "../../_lib/auth";
+import {
+  invalidatePublicCache,
+  type PublicCacheEnv,
+} from "../../_lib/publicCache";
 
 const POSITION_GROUPS = ["goalkeeper", "defender", "midfield", "forward"] as const;
 const ROLES: PlayerRole[] = ["player", "captain", "admin"];
@@ -35,7 +39,9 @@ interface PlayerInput {
   loginEnabled: number;
 }
 
-export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => {
+type AdminPlayerEnv = AuthEnv & PublicCacheEnv;
+
+export const onRequestGet: PagesFunction<AdminPlayerEnv> = async ({ env, request }) => {
   const auth = await requireAdmin(env, request);
   if ("response" in auth) return auth.response;
 
@@ -73,7 +79,7 @@ export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => 
   return jsonResponse({ players: results });
 };
 
-export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) => {
+export const onRequestPost: PagesFunction<AdminPlayerEnv> = async ({ env, request }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -153,15 +159,16 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) =>
     resourceId: id,
     details: { after: row, initialPasswordRule: "filename_123" },
   });
+  await invalidatePublicCache(env, ["players"]);
   return jsonResponse({ player: row }, { status: 201 });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<AdminPlayerEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 
 async function requireAdmin(
-  env: AuthEnv,
+  env: AdminPlayerEnv,
   request: Request
 ): Promise<{ player: AuthPlayer } | { response: Response }> {
   const player = await getCurrentPlayer(env, request);
@@ -172,7 +179,7 @@ async function requireAdmin(
   return { player };
 }
 
-async function getAdminPlayer(env: AuthEnv, id: number) {
+async function getAdminPlayer(env: AdminPlayerEnv, id: number) {
   return env.DB.prepare(
     `
       SELECT

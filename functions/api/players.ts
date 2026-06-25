@@ -1,6 +1,14 @@
-interface Env { DB: D1Database }
+import {
+  cachedJsonResponse,
+  readPublicCache,
+  writePublicCache,
+  type PublicCacheEnv,
+} from "../_lib/publicCache";
 
-export const onRequest: PagesFunction<Env> = async ({ env }) => {
+export const onRequest: PagesFunction<PublicCacheEnv> = async ({ env }) => {
+  const cached = await readPublicCache(env, "players");
+  if (cached) return cachedJsonResponse(cached, "HIT");
+
   const { results } = await env.DB.prepare(
     `
       SELECT
@@ -27,5 +35,7 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
       ORDER BY positionGroup, number
     `
   ).all();
-  return Response.json(results);
+
+  await writePublicCache(env, "players", results);
+  return cachedJsonResponse(results, env.PUBLIC_CACHE ? "MISS" : "BYPASS");
 };

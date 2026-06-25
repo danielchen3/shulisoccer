@@ -6,12 +6,17 @@ import {
   type AuthPlayer,
   type AuthEnv,
 } from "../../../_lib/auth";
+import {
+  invalidatePublicCache,
+  type PublicCacheEnv,
+} from "../../../_lib/publicCache";
 
 type PatchableField = "date" | "content" | "image" | "body";
 
 const PATCHABLE_FIELDS: PatchableField[] = ["date", "content", "image", "body"];
+type AdminNewsEnv = AuthEnv & PublicCacheEnv;
 
-export const onRequestPatch: PagesFunction<AuthEnv> = async ({ env, request, params }) => {
+export const onRequestPatch: PagesFunction<AdminNewsEnv> = async ({ env, request, params }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -46,11 +51,12 @@ export const onRequestPatch: PagesFunction<AuthEnv> = async ({ env, request, par
     resourceId: id,
     details: { before: existing, after: row },
   });
+  await invalidatePublicCache(env, ["news"]);
 
   return jsonResponse({ news: row });
 };
 
-export const onRequestDelete: PagesFunction<AuthEnv> = async ({ env, request, params }) => {
+export const onRequestDelete: PagesFunction<AdminNewsEnv> = async ({ env, request, params }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -74,15 +80,16 @@ export const onRequestDelete: PagesFunction<AuthEnv> = async ({ env, request, pa
     resourceId: id,
     details: { before: existing },
   });
+  await invalidatePublicCache(env, ["news"]);
   return jsonResponse({ ok: true });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<AdminNewsEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 
 async function requireAdmin(
-  env: AuthEnv,
+  env: AdminNewsEnv,
   request: Request
 ): Promise<{ player: AuthPlayer } | { response: Response }> {
   const player = await getCurrentPlayer(env, request);

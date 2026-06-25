@@ -6,6 +6,10 @@ import {
   type AuthPlayer,
   type AuthEnv,
 } from "../../_lib/auth";
+import {
+  invalidatePublicCache,
+  type PublicCacheEnv,
+} from "../../_lib/publicCache";
 
 interface NewsInput {
   date: string;
@@ -14,7 +18,9 @@ interface NewsInput {
   body: string | null;
 }
 
-export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => {
+type AdminNewsEnv = AuthEnv & PublicCacheEnv;
+
+export const onRequestGet: PagesFunction<AdminNewsEnv> = async ({ env, request }) => {
   const auth = await requireAdmin(env, request);
   if ("response" in auth) return auth.response;
 
@@ -25,7 +31,7 @@ export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => 
   return jsonResponse({ news: results });
 };
 
-export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) => {
+export const onRequestPost: PagesFunction<AdminNewsEnv> = async ({ env, request }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -50,16 +56,17 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) =>
     resourceId: id,
     details: { after: row },
   });
+  await invalidatePublicCache(env, ["news"]);
 
   return jsonResponse({ news: row }, { status: 201 });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<AdminNewsEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 
 async function requireAdmin(
-  env: AuthEnv,
+  env: AdminNewsEnv,
   request: Request
 ): Promise<{ player: AuthPlayer } | { response: Response }> {
   const player = await getCurrentPlayer(env, request);

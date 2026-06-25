@@ -1,10 +1,12 @@
 import {
   getCurrentPlayer,
   jsonResponse,
-  recordAuditLog,
   requireSameOrigin,
-  type AuthEnv,
 } from "../../_lib/auth";
+import {
+  emitCommentAuditEvent,
+  type CommentEventEnv,
+} from "../../_lib/commentEvents";
 
 interface CommentOwnerRow {
   id: number;
@@ -13,7 +15,7 @@ interface CommentOwnerRow {
   targetId: string;
 }
 
-export const onRequestDelete: PagesFunction<AuthEnv> = async ({ env, request, params }) => {
+export const onRequestDelete: PagesFunction<CommentEventEnv> = async ({ env, request, params }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -42,7 +44,7 @@ export const onRequestDelete: PagesFunction<AuthEnv> = async ({ env, request, pa
     "UPDATE content_comments SET deletedAt = CURRENT_TIMESTAMP, updatedAt = CURRENT_TIMESTAMP WHERE id = ?"
   ).bind(id).run();
 
-  await recordAuditLog(env, request, player, {
+  await emitCommentAuditEvent(env, request, player, "content_comment_deleted", {
     action: "content_comment.delete",
     resourceType: "content_comment",
     resourceId: id,
@@ -56,7 +58,7 @@ export const onRequestDelete: PagesFunction<AuthEnv> = async ({ env, request, pa
   return jsonResponse({ ok: true });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<CommentEventEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 

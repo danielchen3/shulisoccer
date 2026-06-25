@@ -1,12 +1,14 @@
 import {
   getCurrentPlayer,
   jsonResponse,
-  recordAuditLog,
   requireSameOrigin,
-  type AuthEnv,
 } from "../../../_lib/auth";
+import {
+  emitCommentAuditEvent,
+  type CommentEventEnv,
+} from "../../../_lib/commentEvents";
 
-export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, params }) => {
+export const onRequestPost: PagesFunction<CommentEventEnv> = async ({ env, request, params }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -52,7 +54,7 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, para
     `
   ).bind(result.meta.last_row_id).first();
 
-  await recordAuditLog(env, request, player, {
+  await emitCommentAuditEvent(env, request, player, "discussion_comment_created", {
     action: "discussion.comment.create",
     resourceType: "discussion_comment",
     resourceId: result.meta.last_row_id,
@@ -62,7 +64,7 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, para
   return jsonResponse({ comment }, { status: 201 });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<CommentEventEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 

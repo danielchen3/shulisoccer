@@ -1,10 +1,12 @@
 import {
   getCurrentPlayer,
   jsonResponse,
-  recordAuditLog,
   requireSameOrigin,
-  type AuthEnv,
 } from "../../../_lib/auth";
+import {
+  emitCommentAuditEvent,
+  type CommentEventEnv,
+} from "../../../_lib/commentEvents";
 
 const REACTIONS = ["like", "heart", "fire", "clap", "laugh"] as const;
 
@@ -19,7 +21,7 @@ interface ReactionRow {
   count: number;
 }
 
-export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, params }) => {
+export const onRequestPost: PagesFunction<CommentEventEnv> = async ({ env, request, params }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -74,7 +76,7 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, para
   const reactionCounts = await loadReactionCounts(env, commentId);
   const myReactions = await loadMyReactions(env, commentId, player.id);
 
-  await recordAuditLog(env, request, player, {
+  await emitCommentAuditEvent(env, request, player, "content_comment_reaction_changed", {
     action: selected ? "content_comment_reaction.add" : "content_comment_reaction.remove",
     resourceType: "content_comment",
     resourceId: commentId,
@@ -88,7 +90,7 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request, para
   return jsonResponse({ reactionCounts, myReactions, selected });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<CommentEventEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 
@@ -115,7 +117,7 @@ async function parseReactionInput(
 }
 
 async function loadReactionCounts(
-  env: AuthEnv,
+  env: CommentEventEnv,
   commentId: number
 ): Promise<Record<string, number>> {
   const { results } = await env.DB.prepare(
@@ -135,7 +137,7 @@ async function loadReactionCounts(
 }
 
 async function loadMyReactions(
-  env: AuthEnv,
+  env: CommentEventEnv,
   commentId: number,
   playerId: number
 ): Promise<string[]> {

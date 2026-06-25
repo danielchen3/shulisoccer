@@ -1,11 +1,13 @@
 import {
   getCurrentPlayer,
   jsonResponse,
-  recordAuditLog,
   requireSameOrigin,
-  type AuthEnv,
   type AuthPlayer,
 } from "../_lib/auth";
+import {
+  emitCommentAuditEvent,
+  type CommentEventEnv,
+} from "../_lib/commentEvents";
 
 const TARGET_TYPES = ["news", "match"] as const;
 
@@ -34,7 +36,7 @@ interface MyReactionRow {
   reaction: string;
 }
 
-export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => {
+export const onRequestGet: PagesFunction<CommentEventEnv> = async ({ env, request }) => {
   const url = new URL(request.url);
   const target = parseTarget(url.searchParams.get("targetType"), url.searchParams.get("targetId"));
   if ("response" in target) return target.response;
@@ -76,7 +78,7 @@ export const onRequestGet: PagesFunction<AuthEnv> = async ({ env, request }) => 
   });
 };
 
-export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) => {
+export const onRequestPost: PagesFunction<CommentEventEnv> = async ({ env, request }) => {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
@@ -101,7 +103,7 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) =>
   ).run();
 
   const comment = await getComment(env, result.meta.last_row_id);
-  await recordAuditLog(env, request, player, {
+  await emitCommentAuditEvent(env, request, player, "content_comment_created", {
     action: "content_comment.create",
     resourceType: "content_comment",
     resourceId: result.meta.last_row_id,
@@ -117,12 +119,12 @@ export const onRequestPost: PagesFunction<AuthEnv> = async ({ env, request }) =>
   }, { status: 201 });
 };
 
-export const onRequest: PagesFunction<AuthEnv> = async () => {
+export const onRequest: PagesFunction<CommentEventEnv> = async () => {
   return jsonResponse({ error: "method_not_allowed" }, { status: 405 });
 };
 
 async function parseCreateInput(
-  env: AuthEnv,
+  env: CommentEventEnv,
   request: Request
 ): Promise<{
   targetType: string;
@@ -195,7 +197,7 @@ function parseTarget(
   return { targetType, targetId };
 }
 
-async function getComment(env: AuthEnv, id: number): Promise<CommentRow | null> {
+async function getComment(env: CommentEventEnv, id: number): Promise<CommentRow | null> {
   return env.DB.prepare(
     `
       SELECT
@@ -219,7 +221,7 @@ async function getComment(env: AuthEnv, id: number): Promise<CommentRow | null> 
 }
 
 async function loadReactionCounts(
-  env: AuthEnv,
+  env: CommentEventEnv,
   commentIds: number[]
 ): Promise<Map<number, Record<string, number>>> {
   const counts = new Map<number, Record<string, number>>();
@@ -245,7 +247,7 @@ async function loadReactionCounts(
 }
 
 async function loadMyReactions(
-  env: AuthEnv,
+  env: CommentEventEnv,
   commentIds: number[],
   playerId: number
 ): Promise<Map<number, string[]>> {

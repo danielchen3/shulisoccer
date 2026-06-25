@@ -8,13 +8,17 @@
     "dev:frontend": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "npm run typecheck:app && npm run typecheck:functions",
+    "typecheck": "npm run typecheck:app && npm run typecheck:functions && npm run typecheck:queues",
     "typecheck:app": "tsc -p tsconfig.app.json",
     "typecheck:functions": "tsc -p functions/tsconfig.json",
+    "typecheck:queues": "tsc -p tsconfig.queues.json",
     "check": "npm run typecheck && npm run build",
     "test:smoke": "node scripts/smoke-test.mjs",
     "db:migrate:local": "wrangler d1 migrations apply shulisoccer --local --persist-to=.wrangler/state",
-    "db:migrate:remote": "wrangler d1 migrations apply shulisoccer --remote"
+    "db:migrate:remote": "wrangler d1 migrations apply shulisoccer --remote",
+    "cache:create": "wrangler kv namespace create PUBLIC_CACHE",
+    "queues:create": "wrangler queues create shulisoccer-comment-events --message-retention-period-secs 86400",
+    "queues:deploy": "wrangler deploy --config wrangler.comment-events.toml"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",

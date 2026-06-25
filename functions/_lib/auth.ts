@@ -13,6 +13,7 @@ export interface AuthPlayer {
 }
 
 export interface AuditLogInput {
+  eventId?: string | null;
   action: string;
   resourceType: string;
   resourceId?: string | number | null;
@@ -295,10 +296,23 @@ export async function recordAuditLog(
   actor: AuthPlayer,
   input: AuditLogInput
 ): Promise<void> {
+  await recordAuditLogEntry(env, actor, input, {
+    ipAddress: request.headers.get("cf-connecting-ip"),
+    userAgent: request.headers.get("user-agent"),
+  });
+}
+
+export async function recordAuditLogEntry(
+  env: AuthEnv,
+  actor: AuthPlayer,
+  input: AuditLogInput,
+  metadata: { ipAddress: string | null; userAgent: string | null }
+): Promise<void> {
   try {
     await env.DB.prepare(
       `
         INSERT INTO audit_logs (
+          eventId,
           actorPlayerId,
           actorName,
           actorRole,
@@ -309,9 +323,10 @@ export async function recordAuditLog(
           ipAddress,
           userAgent
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `
     ).bind(
+      input.eventId ?? null,
       actor.id,
       actor.name,
       actor.role,
@@ -319,8 +334,8 @@ export async function recordAuditLog(
       input.resourceType,
       input.resourceId == null ? null : String(input.resourceId),
       input.details === undefined ? null : JSON.stringify(input.details),
-      request.headers.get("cf-connecting-ip"),
-      request.headers.get("user-agent")
+      metadata.ipAddress,
+      metadata.userAgent
     ).run();
   } catch (error) {
     console.error("failed to record audit log", error);
