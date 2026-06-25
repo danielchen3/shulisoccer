@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ApiError } from "../api";
 import { useAuth } from "../auth/AuthContext";
 import { PageHero } from "./shared/PageHero";
 
@@ -19,8 +20,12 @@ export function LoginPage() {
     try {
       await login(username, password);
       navigate("/", { replace: true });
-    } catch {
-      setError("用户名或密码不正确");
+    } catch (caught) {
+      if (caught instanceof ApiError && caught.status >= 500) {
+        setError("Login server error. Check production D1 binding and remote migrations.");
+      } else {
+        setError("Username or password is incorrect.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -29,19 +34,19 @@ export function LoginPage() {
   if (!loading && player) {
     return (
       <>
-        <PageHero eyebrow="Account" title="Player Login" subtitle="球队成员入口" />
+        <PageHero eyebrow="Account" title="Player Login" subtitle="Team member access" />
         <section className="max-w-[720px] mx-auto px-4 sm:px-6 lg:px-10 py-12">
           <div className="border border-black/10 bg-white p-6 sm:p-8">
-            <p className="text-sm text-black/60 mb-2">当前已登录</p>
+            <p className="text-sm text-black/60 mb-2">Signed in as</p>
             <h2 className="text-2xl font-bold">{player.name}</h2>
             <p className="text-sm text-black/60 mt-1">
-              {player.username} · {player.role}
+              {player.username} / {player.role}
             </p>
             <Link
               to="/"
               className="inline-flex mt-6 px-5 py-3 bg-ink text-white text-sm font-semibold uppercase tracking-wider"
             >
-              返回首页
+              Back Home
             </Link>
           </div>
         </section>
@@ -51,7 +56,7 @@ export function LoginPage() {
 
   return (
     <>
-      <PageHero eyebrow="Account" title="Player Login" subtitle="球队成员入口" />
+      <PageHero eyebrow="Account" title="Player Login" subtitle="Team member access" />
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 lg:px-10 py-12">
         <form
           onSubmit={handleSubmit}
@@ -97,7 +102,7 @@ export function LoginPage() {
             disabled={submitting || !username.trim() || !password}
             className="w-full px-5 py-3 bg-ink text-white text-sm font-semibold uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? "登录中..." : "登录"}
+            {submitting ? "Logging in..." : "Login"}
           </button>
         </form>
       </section>

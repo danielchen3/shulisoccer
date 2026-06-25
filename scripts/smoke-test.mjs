@@ -14,6 +14,7 @@ try {
   if (!(await isServerReady())) {
     server = spawn(serverCommand, serverArgs, {
       cwd: process.cwd(),
+      detached: process.platform !== "win32",
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -221,6 +222,10 @@ async function isServerReady() {
 function stopServer(child) {
   if (!child?.pid) return;
 
+  child.stdout?.destroy();
+  child.stderr?.destroy();
+  child.unref();
+
   if (process.platform === "win32") {
     spawnSync("taskkill", ["/pid", String(child.pid), "/t", "/f"], {
       stdio: "ignore",
@@ -228,7 +233,11 @@ function stopServer(child) {
     return;
   }
 
-  child.kill();
+  try {
+    process.kill(-child.pid, "SIGTERM");
+  } catch {
+    child.kill("SIGTERM");
+  }
 }
 
 function createClient() {
