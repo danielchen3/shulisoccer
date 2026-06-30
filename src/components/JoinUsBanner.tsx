@@ -18,21 +18,36 @@ export function JoinUsBanner() {
 
   return (
     <>
-      <div className="bg-brand-500 text-ink text-xs sm:text-sm">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-2 flex items-center justify-between gap-4">
+      <div className="fixed inset-x-4 bottom-4 z-40 flex justify-center sm:inset-x-auto sm:right-6 sm:bottom-6">
+        <div className="relative w-full max-w-sm sm:w-80">
           <button
+            type="button"
             onClick={() => setShowQR(true)}
-            className="font-bold uppercase tracking-wider hover:underline shrink-0"
+            className="group flex w-full items-center justify-between gap-4 rounded-lg bg-brand-500 px-5 py-4 text-left text-ink shadow-2xl ring-2 ring-ink/10 transition-all hover:-translate-y-0.5 hover:bg-brand-400 hover:shadow-[0_18px_40px_rgba(0,0,0,0.24)] focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300"
           >
-            Join Us →
+            <span className="min-w-0">
+              <span className="block font-display text-3xl uppercase leading-none tracking-wide">
+                Join Us
+              </span>
+              <span className="mt-1 block text-sm font-semibold leading-tight">
+                加入树礼足球队
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-2xl font-bold leading-none text-white transition-transform group-hover:translate-x-1"
+            >
+              →
+            </span>
           </button>
           <button
+            type="button"
             onClick={() => {
               setDismissed(true);
               localStorage.setItem("joinUsBannerDismissed", "1");
             }}
-            className="shrink-0 hover:text-ink/60 transition-colors text-lg leading-none"
-            aria-label="Dismiss"
+            className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xl leading-none text-white shadow-lg transition-colors hover:bg-ink-soft"
+            aria-label="Dismiss Join Us"
           >
             ×
           </button>
