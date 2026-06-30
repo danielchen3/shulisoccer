@@ -25,7 +25,7 @@ export const onRequestGet: PagesFunction<AdminNewsEnv> = async ({ env, request }
   if ("response" in auth) return auth.response;
 
   const { results } = await env.DB.prepare(
-    "SELECT id, date, content, image, body FROM news ORDER BY date DESC, id DESC"
+    "SELECT id, date, content, image, body, pinned FROM news ORDER BY pinned DESC, date DESC, id DESC"
   ).all();
 
   return jsonResponse({ news: results });

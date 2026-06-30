@@ -50,7 +50,7 @@ export function NewsDetail() {
                 key={idx}
                 src={src}
                 alt=""
-                className="w-full rounded-md object-cover max-h-[480px]"
+                className="w-full rounded-md"
               />
             ))}
           </div>

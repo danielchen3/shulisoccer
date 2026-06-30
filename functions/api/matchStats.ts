@@ -21,6 +21,7 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
     video: row.videoUrl ? { label: row.videoLabel!, url: row.videoUrl } : undefined,
     events: (JSON.parse(row.events) as Array<{
       round: string; left: string; score: string; right: string;
+      video?: { label: string; url: string };
       videoLabel?: string; videoUrl?: string;
       goals?: Array<{ minute: number; player: string; type: string }>;
       starters?: string[];
@@ -42,7 +43,7 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
       left: e.left,
       score: e.score,
       right: e.right,
-      video: e.videoUrl ? { label: e.videoLabel!, url: e.videoUrl } : undefined,
+      video: e.video ?? (e.videoUrl ? { label: e.videoLabel!, url: e.videoUrl } : undefined),
       goals: e.goals,
       starters: e.starters,
       timeline: e.timeline,

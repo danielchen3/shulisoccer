@@ -10,7 +10,7 @@ export const onRequest: PagesFunction<PublicCacheEnv> = async ({ env }) => {
   if (cached) return cachedJsonResponse(cached, "HIT");
 
   const { results } = await env.DB.prepare(
-    "SELECT * FROM news ORDER BY date DESC"
+    "SELECT * FROM news ORDER BY pinned DESC, date DESC"
   ).all();
 
   await writePublicCache(env, "news", results);

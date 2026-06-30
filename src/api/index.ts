@@ -35,6 +35,10 @@ export interface RetiredPlayer {
   weight?: number;
   foot?: string;
   goals?: number;
+  birthday?: string;
+  number?: number;
+  province?: string;
+  classYear?: number;
 }
 
 export interface MatchGoal {

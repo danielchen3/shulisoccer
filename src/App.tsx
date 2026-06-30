@@ -18,12 +18,14 @@ import { AdminPlayersPage } from "./components/admin/AdminPlayersPage";
 import { AdminAuditPage } from "./components/admin/AdminAuditPage";
 import { DiscussionBoard } from "./components/discussion/DiscussionBoard";
 import { DiscussionDetail } from "./components/discussion/DiscussionDetail";
+import { JoinUsBanner } from "./components/JoinUsBanner";
 
 export default function App() {
   return (
     <AuthProvider>
     <Router>
       <div className="min-h-screen w-full bg-paper-2 text-ink flex flex-col">
+        <JoinUsBanner />
         <NavBar />
         <main className="flex-1 w-full">
           <Routes>
