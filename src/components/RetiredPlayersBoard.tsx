@@ -18,7 +18,7 @@ export function RetiredPlayersBoard() {
         {error && <div className="text-red-500">数据加载失败</div>}
 
         <div className="divide-y divide-black/5">
-          {retired.map((p, idx) => (
+          {retired.map((p) => (
             <LegendRow key={p.name} player={p} />
           ))}
         </div>
