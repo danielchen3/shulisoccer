@@ -8,50 +8,74 @@ const CONTACTS = [
 ];
 
 export function JoinUsBanner() {
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem("joinUsBannerDismissed") === "1"
+  const [collapsed, setCollapsed] = useState(
+    () =>
+      localStorage.getItem("joinUsBannerCollapsed") === "1" ||
+      localStorage.getItem("joinUsBannerDismissed") === "1"
   );
   const [showQR, setShowQR] = useState(false);
   const base = getBaseUrl();
 
-  if (dismissed) return null;
-
   return (
     <>
       <div className="fixed inset-x-4 bottom-4 z-40 flex justify-center sm:inset-x-auto sm:right-6 sm:bottom-6">
-        <div className="relative w-full max-w-sm sm:w-80">
-          <button
-            type="button"
-            onClick={() => setShowQR(true)}
-            className="group flex w-full items-center justify-between gap-4 rounded-lg bg-brand-500 px-5 py-4 text-left text-ink shadow-2xl ring-2 ring-ink/10 transition-all hover:-translate-y-0.5 hover:bg-brand-400 hover:shadow-[0_18px_40px_rgba(0,0,0,0.24)] focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300"
-          >
-            <span className="min-w-0">
-              <span className="block font-display text-3xl uppercase leading-none tracking-wide">
-                Join Us
-              </span>
-              <span className="mt-1 block text-sm font-semibold leading-tight">
-                加入树礼足球队
-              </span>
-            </span>
-            <span
-              aria-hidden="true"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-2xl font-bold leading-none text-white transition-transform group-hover:translate-x-1"
-            >
-              →
-            </span>
-          </button>
+        {collapsed ? (
           <button
             type="button"
             onClick={() => {
-              setDismissed(true);
-              localStorage.setItem("joinUsBannerDismissed", "1");
+              setCollapsed(false);
+              localStorage.removeItem("joinUsBannerDismissed");
+              localStorage.removeItem("joinUsBannerCollapsed");
             }}
-            className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xl leading-none text-white shadow-lg transition-colors hover:bg-ink-soft"
-            aria-label="Dismiss Join Us"
+            className="inline-flex h-14 items-center gap-2 rounded-full bg-brand-500 px-5 text-ink shadow-2xl ring-2 ring-ink/10 transition-all hover:-translate-y-0.5 hover:bg-brand-400 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300"
+            aria-label="Expand Join Us"
           >
-            ×
+            <span className="font-display text-xl uppercase leading-none">
+              Join Us
+            </span>
+            <span
+              aria-hidden="true"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-lg font-bold leading-none text-white"
+            >
+              +
+            </span>
           </button>
-        </div>
+        ) : (
+          <div className="relative w-full max-w-sm sm:w-80">
+            <button
+              type="button"
+              onClick={() => setShowQR(true)}
+              className="group flex w-full items-center justify-between gap-4 rounded-lg bg-brand-500 px-5 py-4 text-left text-ink shadow-2xl ring-2 ring-ink/10 transition-all hover:-translate-y-0.5 hover:bg-brand-400 hover:shadow-[0_18px_40px_rgba(0,0,0,0.24)] focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300"
+            >
+              <span className="min-w-0">
+                <span className="block font-display text-3xl uppercase leading-none tracking-wide">
+                  Join Us
+                </span>
+                <span className="mt-1 block text-sm font-semibold leading-tight">
+                  加入树礼足球队
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-2xl font-bold leading-none text-white transition-transform group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCollapsed(true);
+                localStorage.removeItem("joinUsBannerDismissed");
+                localStorage.setItem("joinUsBannerCollapsed", "1");
+              }}
+              className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xl leading-none text-white shadow-lg transition-colors hover:bg-ink-soft"
+              aria-label="Collapse Join Us"
+            >
+              ×
+            </button>
+          </div>
+        )}
       </div>
 
       {showQR && (
