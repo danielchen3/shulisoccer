@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useCloudData } from "../hooks/useCloudData";
 import { fetchNews, type NewsItem } from "../api";
 import { getBaseUrl } from "../utils/baseUrl";
+import { TeamIntro } from "./TeamIntro";
 
 const HERO_IMAGES = [1, 2, 3, 4, 5, 6, 7, 8];
 const AUTO_INTERVAL = 5000;
@@ -114,6 +115,8 @@ export function NewsBoard() {
           </div>
         </div>
       </section>
+
+      <TeamIntro />
 
       {/* ----- LATEST NEWS GRID ----- */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-12 lg:py-16">
