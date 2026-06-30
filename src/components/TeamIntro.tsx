@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { getBaseUrl } from "../utils/baseUrl";
+
+const TEAM_INTRO_IMAGE = "assets/photo/full/0c8097b65e2109ca09a04e4b1d57291e.jpg";
 
 const TEAM_INTRO = {
   zh: {
@@ -31,6 +34,7 @@ const TEAM_INTRO = {
 type Language = keyof typeof TEAM_INTRO;
 
 export function TeamIntro() {
+  const base = getBaseUrl();
   const [language, setLanguage] = useState<Language>("zh");
   const intro = TEAM_INTRO[language];
 
@@ -52,8 +56,16 @@ export function TeamIntro() {
             </p>
           </aside>
 
-          <div className="bg-white border border-black/5 px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10 shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
-            <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative overflow-hidden bg-white border border-black/5 px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10 shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+            <img
+              src={`${base}${TEAM_INTRO_IMAGE}`}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover opacity-55 contrast-110 saturate-115"
+            />
+            <div className="absolute inset-0 bg-white/50" />
+
+            <div className="relative mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex min-w-0 items-center gap-3">
                 <span className="h-px w-12 bg-black/10 sm:w-20" />
                 <h3 className="font-display text-2xl uppercase">{intro.label}</h3>
@@ -83,7 +95,7 @@ export function TeamIntro() {
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="relative space-y-5">
               {intro.paragraphs.map((paragraph, index) => (
                 <p
                   key={paragraph}
