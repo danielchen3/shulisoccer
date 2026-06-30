@@ -35,6 +35,7 @@ export function NewsBoard() {
 
   const newsList = data ?? [];
   const featured = newsList[0];
+  const latestNewsPath = featured ? `/news/${featured.id}` : "/";
   return (
     <div>
       {/* ----- HERO ----- */}
@@ -43,23 +44,32 @@ export function NewsBoard() {
           {/* 左：暗色文字面板 */}
           <div className="lg:col-span-2 p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative z-10">
             <span className="inline-block text-brand-400 text-xs font-bold uppercase tracking-[0.3em] mb-6">
-              ▍ Featured
+              ▍ Shuli College Football
             </span>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] uppercase mb-6">
-              {featured?.content?.split("\n")[0] ?? "树礼书院\n2025/26 赛季"}
+              SHULI FC
+              <span className="mt-3 block text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
+                树礼书院足球队
+              </span>
             </h1>
             <p className="text-white/70 text-sm sm:text-base mb-8 max-w-md">
               {featured?.date ?? ""} · 关注最新球队动态、比赛结果与球员故事。
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                to="/players"
+                to={latestNewsPath}
                 className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-ink font-bold uppercase tracking-wider text-sm px-6 py-3 transition-colors"
               >
-                Squad
+                Latest News
                 <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
                   <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
+              </Link>
+              <Link
+                to="/players"
+                className="inline-flex items-center gap-2 border border-white/30 hover:bg-white hover:text-ink font-bold uppercase tracking-wider text-sm px-6 py-3 transition-colors"
+              >
+                Squad
               </Link>
               <Link
                 to="/matches"
